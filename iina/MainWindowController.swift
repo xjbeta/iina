@@ -639,9 +639,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
       
       danmakuWebView.setValue(false, forKey: "drawsBackground")
       danmakuWebView.configuration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
-      #if DEBUG
       danmakuWebView.configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
-      #endif
       if let url = URL(string: "http://127.0.0.1:19080/danmaku/index.htm") {
         danmakuWebView.load(URLRequest(url: url))
       }
