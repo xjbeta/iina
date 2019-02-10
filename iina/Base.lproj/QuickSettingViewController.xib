@@ -94,7 +94,7 @@
                     <rect key="frame" x="0.0" y="823" width="120" height="48"/>
                     <buttonCell key="cell" type="square" title="VIDEO" bezelStyle="shadowlessSquare" alignment="center" imageScaling="proportionallyDown" inset="2" id="lQt-I0-jHO">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
+                        <font key="font" metaFont="systemBold"/>
                     </buttonCell>
                     <connections>
                         <action selector="tabBtnAction:" target="-2" id="T17-c3-4hp"/>
