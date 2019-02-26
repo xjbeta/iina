@@ -265,6 +265,7 @@ class PlayerCore: NSObject {
       // force-media-title="xxx",ytdl="no",referrer="xxxx",audio-file="xxx"
       
       argsStr += $0.element.0
+      argsStr += "="
       argsStr += "\""
       argsStr += $0.element.1
       argsStr += "\""
