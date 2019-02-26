@@ -236,6 +236,49 @@ class PlayerCore: NSObject {
       openURL(url)
     }
   }
+  
+  func openURLDirect(_ urls: [URL], args: [(String, String)]) {
+    guard let url = urls.first else { return }
+    let path = url.absoluteString
+    Logger.log("Opening \(path) in main window directly", subsystem: subsystem)
+    info.currentURL = url
+    info.isNetworkResource = true
+    
+    let _ = mainWindow.window
+    if !mainWindow.window!.isVisible {
+      SleepPreventer.preventSleep()
+    }
+    initialWindow.close()
+    if isInMiniPlayer {
+      miniPlayer.showWindow(nil)
+    } else {
+      mainWindow.showWindow(nil)
+      mainWindow.windowDidOpen()
+    }
+    
+    // Send load file command
+    info.fileLoading = true
+    info.justOpenedFile = true
+
+    var argsStr = ""
+    
+    args.enumerated().forEach {
+      // force-media-title="xxx",ytdl="no",referrer="xxxx",audio-file="xxx"
+      
+      argsStr += $0.element.0
+      argsStr += "\""
+      argsStr += $0.element.1
+      argsStr += "\""
+      
+      if $0.offset < (args.count - 1) {
+        argsStr += ","
+      }
+    }
+    
+    mpv.command(.loadfile, args: [path,
+                                  "replace",
+                                  argsStr], checkError: true)
+  }
 
 
   private func openMainWindow(path: String, url: URL, isNetwork: Bool) {

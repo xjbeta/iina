@@ -64,6 +64,8 @@ if userArgs.contains(where: { $0 == "--help" || $0 == "-h" }) {
             Enter Picture-in-Picture after opening the media.
     --danmaku:
             Enable the webview for danmaku.
+    --directly:
+            Open url and mpv options with loadfile.
     --help | -h:
             Print this message.
 

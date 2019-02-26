@@ -183,7 +183,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       var lastPlayerCore: PlayerCore? = nil
       let getNewPlayerCore = { () -> PlayerCore in
         let pc = PlayerCore.newPlayerCore
-        self.commandLineStatus.assignMPVArguments(to: pc)
+        if !self.commandLineStatus.directly {
+          self.commandLineStatus.assignMPVArguments(to: pc)
+        }
         pc.enableDanmaku = self.commandLineStatus.danmaku
         lastPlayerCore = pc
         return pc
@@ -198,7 +200,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return FileManager.default.fileExists(atPath: filename) ? URL(fileURLWithPath: filename) : nil
           }
         }
-        if commandLineStatus.openSeparateWindows {
+        if commandLineStatus.directly {
+          getNewPlayerCore().openURLDirect(validFileURLs, args: self.commandLineStatus.mpvArguments)
+        } else if commandLineStatus.openSeparateWindows {
           validFileURLs.forEach { url in
             getNewPlayerCore().openURL(url)
           }
@@ -504,6 +508,7 @@ struct CommandLineStatus {
   var openSeparateWindows = false
   var enterPIP = false
   var danmaku = false
+  var directly = false
   var mpvArguments: [(String, String)] = []
   var iinaArguments: [(String, String)] = []
   var filenames: [String] = []
@@ -539,6 +544,9 @@ struct CommandLineStatus {
         }
         if name == "danmaku" {
           danmaku = true
+        }
+        if name == "directly" {
+          directly = true
         }
       }
     }
