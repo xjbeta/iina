@@ -240,7 +240,6 @@ class PlayerCore: NSObject {
   func openURLDirect(_ urls: [URL], args: [(String, String)]) {
     guard let url = urls.first else { return }
     let path = url.absoluteString
-    Logger.log("Opening \(path) in main window directly", subsystem: subsystem)
     info.currentURL = url
     info.isNetworkResource = true
     
@@ -274,7 +273,7 @@ class PlayerCore: NSObject {
         argsStr += ","
       }
     }
-    
+    Logger.log("Opening \(path) with \(argsStr) in main window directly", subsystem: subsystem)
     mpv.command(.loadfile, args: [path,
                                   "replace",
                                   argsStr], checkError: true)
