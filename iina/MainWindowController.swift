@@ -1650,6 +1650,9 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
     if fsState.isFullscreen && Preference.bool(for: .blackOutMonitor) {
       blackOutOtherMonitors()
     }
+    if #available(macOS 10.13, *), RemoteCommandController.useSystemMediaControl {
+      NowPlayingInfoManager.updateState(player.info.isPaused ? .paused : .playing)
+    }
     NotificationCenter.default.post(name: .iinaMainWindowChanged, object: nil)
   }
 
