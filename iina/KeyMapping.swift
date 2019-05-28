@@ -19,7 +19,7 @@ class KeyMapping: NSObject {
 
   @objc var keyForDisplay: String {
     get {
-      return UserDefaults.standard.bool(forKey: "displayKeyBindingRawValues") ? key : prettyKey
+      return Preference.bool(for: .displayKeyBindingRawValues) ? key : prettyKey
     }
     set {
       key = newValue
@@ -29,7 +29,7 @@ class KeyMapping: NSObject {
   
   @objc var actionForDisplay: String {
     get {
-      return UserDefaults.standard.bool(forKey: "displayKeyBindingRawValues") ? readableAction : prettyCommand
+      return Preference.bool(for: .displayKeyBindingRawValues) ? readableAction : prettyCommand
     }
     set {
       rawAction = newValue
@@ -124,7 +124,7 @@ class KeyMapping: NSObject {
         continue
       }
       // remove inline comment
-      if let sharpIndex = line.index(of: "#") {
+      if let sharpIndex = line.firstIndex(of: "#") {
         line = String(line[...line.index(before: sharpIndex)])
       }
       // split

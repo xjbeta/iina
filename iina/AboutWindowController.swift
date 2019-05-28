@@ -100,6 +100,8 @@ class AboutWindowController: NSWindowController {
       contributorsFooterImage.isHidden = false
     }
 
+    contributorsCollectionView.enclosingScrollView?.contentInsets.bottom = contributorsFooterView.frame.height * loc[colors.firstIndex(of: 0)! - 1]
+
     translatorsTableView.dataSource = self
     translatorsTableView.delegate = self
   }
