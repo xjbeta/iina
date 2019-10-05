@@ -241,7 +241,7 @@ class PlayerCore: NSObject {
     guard let url = urls.first else { return }
     let path = url.absoluteString
     info.currentURL = url
-    info.isNetworkResource = true
+    info.isNetworkResource = !url.isFileURL
     
     let _ = mainWindow.window
     if !mainWindow.window!.isVisible {
