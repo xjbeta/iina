@@ -659,7 +659,6 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
     }
     
     // video view
-    guard let cv = w.contentView else { return }
     cv.autoresizesSubviews = false
     addVideoViewToWindow()
     w.setIsVisible(true)
