@@ -13,6 +13,7 @@ extension NSSlider {
   func knobPointPosition() -> CGFloat {
     let sliderOrigin = frame.origin.x + knobThickness / 2
     let sliderWidth = frame.width - knobThickness
+    assert(maxValue > minValue)
     let knobPos = sliderOrigin + sliderWidth * CGFloat((doubleValue - minValue) / (maxValue - minValue))
     return knobPos
   }
@@ -37,6 +38,7 @@ extension NSSize {
 
   var aspect: CGFloat {
     get {
+      assert(width != 0 && height != 0)
       return width / height
     }
   }
@@ -95,6 +97,9 @@ extension NSSize {
    ```
    */
   func grow(toSize size: NSSize) -> NSSize {
+    if width == 0 || height == 0 {
+      return size
+    }
     let sizeAspect = size.aspect
     if aspect > sizeAspect {  // self is wider, grow to meet height
       return NSSize(width: size.height * aspect, height: size.height)
@@ -121,7 +126,10 @@ extension NSSize {
    ```
    */
   func shrink(toSize size: NSSize) -> NSSize {
-    let  sizeAspect = size.aspect
+    if width == 0 || height == 0 {
+      return size
+    }
+    let sizeAspect = size.aspect
     if aspect < sizeAspect { // self is taller, shrink to meet height
       return NSSize(width: size.height * aspect, height: size.height)
     } else {
