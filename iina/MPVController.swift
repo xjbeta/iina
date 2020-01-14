@@ -926,10 +926,10 @@ class MPVController: NSObject {
       player.postNotification(.iinaMediaTitleChanged)
 
     case MPVProperty.timePos:
-      guard player.mainWindow.isWindowLoaded,
-        player.enableDanmaku else { break }
       let timePos = getDouble(MPVProperty.timePos)
       DispatchQueue.main.async {
+        guard self.player.mainWindow.isWindowLoaded,
+          self.player.enableDanmaku else { return }
         self.player.mainWindow.updateDanmakuTime(timePos)
       }
       
