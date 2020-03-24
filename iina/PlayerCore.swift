@@ -144,8 +144,8 @@ class PlayerCore: NSObject {
     super.init()
     self.mpv = MPVController(playerCore: self)
     self.mainWindow = MainWindowController(playerCore: self)
+    self.miniPlayer = MiniPlayerWindowController(playerCore: self)
     self.initialWindow = InitialWindowController(playerCore: self)
-    self.miniPlayer = MiniPlayerWindowController(player: self)
     if #available(macOS 10.12.2, *) {
       self._touchBarSupport = TouchBarSupport(playerCore: self)
     }
@@ -295,6 +295,7 @@ class PlayerCore: NSObject {
     if isInMiniPlayer {
       miniPlayer.showWindow(nil)
     } else {
+      mainWindow.windowWillOpen()
       mainWindow.showWindow(nil)
       mainWindow.windowDidOpen()
     }
@@ -390,7 +391,7 @@ class PlayerCore: NSObject {
     let needRestoreLayout = !miniPlayer.loaded
     miniPlayer.showWindow(self)
 
-    miniPlayer.updateTrack()
+    miniPlayer.updateTitle()
     let playlistView = mainWindow.playlistView.view
     let videoView = mainWindow.videoView
     // reset down shift for playlistView
@@ -409,17 +410,13 @@ class PlayerCore: NSObject {
     videoView.removeFromSuperview()
     miniPlayer.videoWrapperView.addSubview(videoView, positioned: .below, relativeTo: nil)
     Utility.quickConstraints(["H:|[v]|", "V:|[v]|"], ["v": videoView])
-    let (dw, dh) = videoSizeForDisplay
-    miniPlayer.updateVideoViewAspectConstraint(withAspect: CGFloat(dw) / CGFloat(dh))
 
-    // if no video track (or video info is still not available now), set aspect ratio for main window
-    if let mw = mainWindow.window, mw.aspectRatio == .zero {
-      let size = NSSize(width: dw, height: dh)
-      mw.setFrame(NSRect(origin: mw.frame.origin, size: size), display: false)
-      mw.aspectRatio = size
-    }
+    let (width, height) = originalVideoSize
+    let aspect = (width == 0 || height == 0) ? 1 : CGFloat(width) / CGFloat(height)
+    miniPlayer.updateVideoViewAspectConstraint(withAspect: aspect)
+
     // if received video size before switching to music mode, hide default album art
-    if !info.videoTracks.isEmpty {
+    if info.vid != 0 {
       miniPlayer.defaultAlbumArt.isHidden = true
     }
     // in case of video size changed, reset mini player window size if playlist is folded
@@ -468,7 +465,8 @@ class PlayerCore: NSObject {
       mainWindow.window?.makeKeyAndOrderFront(self)
     }
     // if aspect ratio is not set
-    if mainWindow.window?.aspectRatio == nil {
+    let (width, height) = originalVideoSize
+    if width == 0 && height == 0 {
       mainWindow.window?.aspectRatio = AppData.sizeWhenNoVideo
     }
     // hide mini player
@@ -934,9 +932,9 @@ class PlayerCore: NSObject {
   func removeVideoFilter(_ filter: MPVFilter) -> Bool {
     var result = true
     if let label = filter.label {
-      mpv.command(.vf, args: ["del", "@" + label], checkError: false) { result = $0 >= 0 }
+      mpv.command(.vf, args: ["remove", "@" + label], checkError: false) { result = $0 >= 0 }
     } else {
-      mpv.command(.vf, args: ["del", filter.stringFormat], checkError: false) { result = $0 >= 0 }
+      mpv.command(.vf, args: ["remove", filter.stringFormat], checkError: false) { result = $0 >= 0 }
     }
     return result
   }
@@ -949,7 +947,7 @@ class PlayerCore: NSObject {
 
   func removeAudioFilter(_ filter: MPVFilter) -> Bool {
     var result = true
-    mpv.command(.af, args: ["del", filter.stringFormat], checkError: false)  { result = $0 >= 0 }
+    mpv.command(.af, args: ["remove", filter.stringFormat], checkError: false)  { result = $0 >= 0 }
     return result
   }
 
@@ -1026,9 +1024,11 @@ class PlayerCore: NSObject {
     mpv.command(.writeWatchLaterConfig)
     if let url = info.currentURL {
       Preference.set(url, for: .iinaLastPlayedFilePath)
-      // Write to cache directly (rather than calling `refreshCachedVideoProgress`).
-      // If user only closed the window but didn't quit the app, this can make sure playlist displays the correct progress.
-      info.cachedVideoDurationAndProgress[url.path] = (duration: info.videoDuration?.second, progress: info.videoPosition?.second)
+      playlistQueue.async {
+        // Write to cache directly (rather than calling `refreshCachedVideoProgress`).
+        // If user only closed the window but didn't quit the app, this can make sure playlist displays the correct progress.
+        self.info.cachedVideoDurationAndProgress[url.path] = (duration: self.info.videoDuration?.second, progress: self.info.videoPosition?.second)
+      }
     }
     if let position = info.videoPosition?.second {
       Preference.set(position, for: .iinaLastPlayedFilePosition)
@@ -1108,8 +1108,12 @@ class PlayerCore: NSObject {
         mainWindow.volumeSlider.isEnabled = false
       }
 
+      if info.vid == 0 {
+        notifyMainWindowVideoSizeChanged()
+      }
+
       if self.isInMiniPlayer {
-        miniPlayer.defaultAlbumArt.isHidden = !self.info.videoTracks.isEmpty
+        miniPlayer.defaultAlbumArt.isHidden = self.info.vid != 0
       }
     }
     // set initial properties for the first file
@@ -1133,6 +1137,7 @@ class PlayerCore: NSObject {
   func playbackRestarted() {
     Logger.log("Playback restarted", subsystem: subsystem)
     reloadSavedIINAfilters()
+
     DispatchQueue.main.async {
       Timer.scheduledTimer(timeInterval: TimeInterval(0.2), target: self, selector: #selector(self.reEnableOSDAfterFileLoading), userInfo: nil, repeats: false)
     }
@@ -1224,11 +1229,9 @@ class PlayerCore: NSObject {
   // MARK: - Sync with UI in MainWindow
 
   func notifyMainWindowVideoSizeChanged() {
-    DispatchQueue.main.sync {
-      self.mainWindow.adjustFrameByVideoSize()
-      if self.isInMiniPlayer {
-        self.miniPlayer.updateVideoSize()
-      }
+    mainWindow.adjustFrameByVideoSize()
+    if isInMiniPlayer {
+      miniPlayer.updateVideoSize()
     }
   }
 
@@ -1303,8 +1306,8 @@ class PlayerCore: NSObject {
 
     case .playButton:
       let pause = mpv.getFlag(MPVOption.PlaybackControl.pause)
-      info.isPaused = pause
       DispatchQueue.main.async {
+        self.info.isPaused = pause
         self.mainWindow.updatePlayButtonState(pause ? .off : .on)
         self.miniPlayer.updatePlayButtonState(pause ? .off : .on)
         if #available(macOS 10.12.2, *) {
