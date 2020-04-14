@@ -1332,10 +1332,10 @@ class MainWindowController: PlayerWindowController {
       let targetFrame: NSRect
       if toFullScreen {
         aspect = window.aspectRatio == .zero ? window.frame.size : window.aspectRatio
-        targetFrame = aspect.shrink(toSize: window.frame.size).centeredRect(in: window.frame)
+        targetFrame = aspect.shrink(toSize: window.frame.size).centeredRect(in: window.contentView!.frame)
       } else {
         aspect = window.screen?.frame.size ?? NSScreen.main!.frame.size
-        targetFrame = aspect.grow(toSize: window.frame.size).centeredRect(in: window.frame)
+        targetFrame = aspect.grow(toSize: window.frame.size).centeredRect(in: window.contentView!.frame)
       }
 
       setConstraintsForVideoView([
@@ -2020,6 +2020,8 @@ class MainWindowController: PlayerWindowController {
   /** Set window size when info available, or video size changed. */
   func adjustFrameByVideoSize() {
     guard let window = window else { return }
+
+    videoView.videoLayer.draw(forced: true)
 
     let (width, height) = player.videoSizeForDisplay
 
