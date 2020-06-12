@@ -287,18 +287,23 @@ class PlayerCore: NSObject {
     // clear currentFolder since playlist is cleared, so need to auto-load again in playerCore#fileStarted
     info.currentFolder = nil
     info.isNetworkResource = isNetwork
+
+    let isFirstLoad = !mainWindow.loaded
     let _ = mainWindow.window
-    if !mainWindow.window!.isVisible {
-      SleepPreventer.preventSleep()
-    }
     initialWindow.close()
     if isInMiniPlayer {
       miniPlayer.showWindow(nil)
     } else {
-      mainWindow.windowWillOpen()
+      // we only want to call windowWillOpen when the window is currently closed.
+      // if the window is opened for the first time, it will become visible in windowDidLoad, so we need to check isFirstLoad.
+      // window.isVisible will work from the second time.
+      if isFirstLoad || !mainWindow.window!.isVisible {
+        mainWindow.windowWillOpen()
+      }
       mainWindow.showWindow(nil)
       mainWindow.windowDidOpen()
     }
+    
     // Send load file command
     info.fileLoading = true
     info.justOpenedFile = true
@@ -558,19 +563,19 @@ class PlayerCore: NSObject {
   }
 
   func screenshot() {
+    guard let vid = info.vid, vid > 0 else { return }
     let option = Preference.bool(for: .screenshotIncludeSubtitle) ? "subtitles" : "video"
-    var tookScreenshot = false
+    var screenshotTaken = false
     if Preference.bool(for: .screenshotSaveToFile) {
       mpv.command(.screenshot, args: [option])
-      tookScreenshot = true
+      screenshotTaken = true
     }
-    if Preference.bool(for: .screenshotCopyToClipboard) {
-      let screenshot = mpv.getScreenshot(option)
+    if Preference.bool(for: .screenshotCopyToClipboard), let screenshot = mpv.getScreenshot(option) {
       NSPasteboard.general.clearContents()
       NSPasteboard.general.writeObjects([screenshot])
-      tookScreenshot = true
+      screenshotTaken = true
     }
-    if tookScreenshot {
+    if screenshotTaken {
       sendOSD(.screenshot)
     }
   }
@@ -1137,6 +1142,7 @@ class PlayerCore: NSObject {
   func playbackRestarted() {
     Logger.log("Playback restarted", subsystem: subsystem)
     reloadSavedIINAfilters()
+    mainWindow.videoView.videoLayer.draw(forced: true)
 
     DispatchQueue.main.async {
       Timer.scheduledTimer(timeInterval: TimeInterval(0.2), target: self, selector: #selector(self.reEnableOSDAfterFileLoading), userInfo: nil, repeats: false)

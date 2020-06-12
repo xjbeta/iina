@@ -1986,7 +1986,7 @@ class MainWindowController: PlayerWindowController {
       } else {
         x = CGFloat(Int(strx)!)
       }
-      winFrame.origin.x = (xSign == "+" ? x : screenFrame.width - x) + screenFrame.origin.x
+      winFrame.origin.x = xSign == "+" ? x : screenFrame.width - x
       // if xSign equals "-", need set right border as origin
       if (xSign == "-") {
         winFrame.origin.x -= winFrame.width
@@ -2000,12 +2000,12 @@ class MainWindowController: PlayerWindowController {
       } else {
         y = CGFloat(Int(stry)!)
       }
-      winFrame.origin.y = (ySign == "+" ? y : screenFrame.height - y) + screenFrame.origin.y
+      winFrame.origin.y = ySign == "+" ? y : screenFrame.height - y
       if (ySign == "-") {
         winFrame.origin.y -= winFrame.height
       }
     }
-    // if x and y not specified
+    // if x and y are not specified
     if geometry.x == nil && geometry.y == nil && widthOrHeightIsSet {
       winFrame.origin.x = (screenFrame.width - winFrame.width) / 2
       winFrame.origin.y = (screenFrame.height - winFrame.height) / 2
@@ -2020,8 +2020,6 @@ class MainWindowController: PlayerWindowController {
   /** Set window size when info available, or video size changed. */
   func adjustFrameByVideoSize() {
     guard let window = window else { return }
-
-    videoView.videoLayer.draw(forced: true)
 
     let (width, height) = player.videoSizeForDisplay
 
@@ -2508,8 +2506,10 @@ extension MainWindowController: PIPViewControllerDelegate {
 
     // If the video is paused, it will end up in a weird state due to the
     // animation. By forcing a redraw it will keep its paused image throughout.
+    // (At least) in 10.15, presentAsPictureInPicture: behaves asynchronously.
+    // Therefore we should wait until the view is moved to the PIP superview.
     if player.info.isPaused {
-      videoView.videoLayer.draw(forced: true)
+      videoView.pendingRedrawAfterEnteringPIP = true
     }
 
     if let window = self.window {
@@ -2548,7 +2548,7 @@ extension MainWindowController: PIPViewControllerDelegate {
     if isWindowHidden {
       window?.makeKeyAndOrderFront(self)
     }
-    
+
     pipStatus = .notInPIP
 
     addVideoViewToWindow()
@@ -2560,14 +2560,16 @@ extension MainWindowController: PIPViewControllerDelegate {
     if player.info.isPaused {
       videoView.videoLayer.draw(forced: true)
     }
-    
+
     updateTimer()
-    
+
     isWindowMiniaturizedDueToPip = false
     isWindowHidden = false
   }
 
-  func pipShouldClose(_ pip: PIPViewController) -> Bool {
+  func prepareForPIPClosure(_ pip: PIPViewController) {
+    guard pipStatus == .inPIP else { return }
+    guard let window = window else { return }
     // This is called right before we're about to close the PIP
     pipStatus = .intermediate
     
@@ -2578,17 +2580,24 @@ extension MainWindowController: PIPViewControllerDelegate {
 
     // Set frame to animate back to
     if fsState.isFullscreen {
-      let newVideoSize = videoView.videoSize!.satisfyMaxSizeWithSameAspectRatio(window!.frame.size)
-      pip.replacementRect = newVideoSize.centeredRect(in: window!.frame)
+      let newVideoSize = videoView.frame.size.shrink(toSize: window.frame.size)
+      pip.replacementRect = newVideoSize.centeredRect(in: .init(origin: .zero, size: window.frame.size))
     } else {
-      pip.replacementRect = window?.contentView?.frame ?? .zero
+      pip.replacementRect = window.contentView?.frame ?? .zero
     }
     pip.replacementWindow = window
 
     // Bring the window to the front and deminiaturize it
     NSApp.activate(ignoringOtherApps: true)
-    window?.deminiaturize(pip)
+    window.deminiaturize(pip)
+  }
 
+  func pipWillClose(_ pip: PIPViewController) {
+    prepareForPIPClosure(pip)
+  }
+
+  func pipShouldClose(_ pip: PIPViewController) -> Bool {
+    prepareForPIPClosure(pip)
     return true
   }
 

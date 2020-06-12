@@ -378,7 +378,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       if let newWindowValue = queryDict["new_window"], newWindowValue == "1" {
         player = PlayerCore.newPlayerCore
       } else {
-        player = PlayerCore.active
+        player = PlayerCore.activeOrNewForMenuAction(isAlternative: false)
       }
 
       // enqueue
