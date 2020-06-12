@@ -792,14 +792,18 @@ class MainWindowController: PlayerWindowController {
   }
 
   override func mouseDragged(with event: NSEvent) {
+    let currentLocation = event.locationInWindow
     if isResizingSidebar {
       // resize sidebar
-      let currentLocation = event.locationInWindow
       let newWidth = window!.frame.width - currentLocation.x - 2
       sideBarWidthConstraint.constant = newWidth.clamped(to: PlaylistMinWidth...PlaylistMaxWidth)
     } else if !fsState.isFullscreen {
+      if let p1 = mousePosRelatedToWindow, !isDragging {
+        let p2 = currentLocation
+        let distance = sqrt(pow((p1.x - p2.x), 2) + pow((p1.y - p2.y), 2))
+        isDragging = distance > 0.5
+      }
       // move the window by dragging
-      isDragging = true
       guard !controlBarFloating.isDragging else { return }
       if mousePosRelatedToWindow != nil {
         window?.performDrag(with: event)
