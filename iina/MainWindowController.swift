@@ -2631,8 +2631,7 @@ extension MainWindowController: WKNavigationDelegate {
   func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
     Logger.log("Danmaku webView finish loading.")
     danmakuFinishLoading = true
-    evaluateJavaScript("window.initDM();")
-    evaluateJavaScript("window.resize();")
+    evaluateJavaScript("initContent('\(player.uuid)');")
   }
   
   func evaluateJavaScript(_ str: String) {

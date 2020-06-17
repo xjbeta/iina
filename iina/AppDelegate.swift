@@ -183,10 +183,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       var lastPlayerCore: PlayerCore? = nil
       let getNewPlayerCore = { () -> PlayerCore in
         let pc = PlayerCore.newPlayerCore
-        if !self.commandLineStatus.directly {
-          self.commandLineStatus.assignMPVArguments(to: pc)
+        let status = self.commandLineStatus
+        if !status.directly {
+          status.assignMPVArguments(to: pc)
         }
-        pc.enableDanmaku = self.commandLineStatus.danmaku
+        pc.enableDanmaku = status.danmaku
+        if pc.enableDanmaku {
+          pc.uuid = status.uuid
+        }
         lastPlayerCore = pc
         return pc
       }
@@ -512,6 +516,7 @@ struct CommandLineStatus {
   var mpvArguments: [(String, String)] = []
   var iinaArguments: [(String, String)] = []
   var filenames: [String] = []
+  var uuid = ""
 
   mutating func parseArguments(_ args: [String]) {
     mpvArguments.removeAll()
@@ -519,6 +524,7 @@ struct CommandLineStatus {
     for arg in args {
       let splitted = arg.dropFirst(2).split(separator: "=", maxSplits: 1)
       let name = String(splitted[0])
+      let value = splitted.count == 2 ? String(splitted[1]) : ""
       if (name.hasPrefix("mpv-")) {
         // mpv args
         if splitted.count <= 1 {
@@ -547,6 +553,9 @@ struct CommandLineStatus {
         }
         if name == "directly" {
           directly = true
+        }
+        if name == "uuid" {
+          uuid = value
         }
       }
     }

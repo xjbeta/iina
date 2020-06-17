@@ -137,6 +137,7 @@ class PlayerCore: NSObject {
   
   // Danmaku
   var enableDanmaku = false
+  var uuid = ""
 
   static var keyBindings: [String: KeyMapping] = [:]
 
