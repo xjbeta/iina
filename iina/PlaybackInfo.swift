@@ -96,6 +96,10 @@ class PlaybackInfo {
   var delogoFilter: MPVFilter?
 
   var deinterlace: Bool = false
+  var hwdec: String = "no"
+  var hwdecEnabled: Bool {
+    hwdec != "no"
+  }
 
   // video equalizer
   var brightness: Int = 0
@@ -184,6 +188,7 @@ class PlaybackInfo {
   var currentSubsInfo: [FileInfo] = []
   var currentVideosInfo: [FileInfo] = []
   var cachedVideoDurationAndProgress: [String: (duration: Double?, progress: Double?)] = [:]
+  var cachedMetadata: [String: (title: String?, album: String?, artist: String?)] = [:]
 
   var thumbnailsReady = false
   var thumbnailsProgress: Double = 0

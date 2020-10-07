@@ -10,8 +10,14 @@ import Cocoa
 import Mustache
 import WebKit
 
-fileprivate let TitleBarHeightNormal: CGFloat = 22
-fileprivate let TitleBarHeightWithOSC: CGFloat = 22 + 24 + 10
+fileprivate let TitleBarHeightNormal: CGFloat = {
+  if #available(macOS 10.16, *) {
+    return 28
+  } else {
+    return 22
+  }
+}()
+fileprivate let TitleBarHeightWithOSC: CGFloat = TitleBarHeightNormal + 24 + 10
 fileprivate let TitleBarHeightWithOSCInFullScreen: CGFloat = 24 + 10
 fileprivate let OSCTopMainViewMarginTop: CGFloat = 26
 fileprivate let OSCTopMainViewMarginTopInFullScreen: CGFloat = 6
@@ -92,7 +98,17 @@ class MainWindowController: PlayerWindowController {
   var cachedScreenCount = 0
   var blackWindows: [NSWindow] = []
 
+  lazy var rotation: Int = {
+    return player.mpv.getInt(MPVProperty.videoParamsRotate)
+  }()
+
   // MARK: - Status
+
+  override var isOntop: Bool {
+    didSet {
+      updateOnTopIcon()
+    }
+  }
 
   /** For mpv's `geometry` option. We cache the parsed structure
    so never need to parse it every time. */
@@ -118,6 +134,7 @@ class MainWindowController: PlayerWindowController {
 
   var isPausedDueToInactive: Bool = false
   var isPausedDueToMiniaturization: Bool = false
+  var isPausedPriorToInteractiveMode: Bool = false
 
   var lastMagnification: CGFloat = 0.0
 
@@ -149,6 +166,7 @@ class MainWindowController: PlayerWindowController {
 
   /** Whether current osd needs user interaction to be dismissed */
   var isShowingPersistentOSD = false
+  var osdContext: Any?
 
   // MARK: - Enums
 
@@ -291,7 +309,8 @@ class MainWindowController: PlayerWindowController {
     .blackOutMonitor,
     .useLegacyFullScreen,
     .displayTimeAndBatteryInFullScreen,
-    .controlBarToolbarButtons
+    .controlBarToolbarButtons,
+    .alwaysShowOnTopIcon
   ]
 
   override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
@@ -343,6 +362,8 @@ class MainWindowController: PlayerWindowController {
       if let newValue = change[.newKey] as? [Int] {
         setupOSCToolbarButtons(newValue.compactMap(Preference.ToolBarButton.init(rawValue:)))
       }
+    case PK.alwaysShowOnTopIcon.rawValue:
+      updateOnTopIcon()
     default:
       return
     }
@@ -365,6 +386,9 @@ class MainWindowController: PlayerWindowController {
     }
   }
 
+  var titlebarAccesoryViewController: NSTitlebarAccessoryViewController!
+  @IBOutlet var titlebarAccessoryView: NSView!
+
   /** Current OSC view. */
   var currentControlBar: NSView?
 
@@ -376,10 +400,9 @@ class MainWindowController: PlayerWindowController {
   @IBOutlet weak var fragControlViewMiddleButtons1Constraint: NSLayoutConstraint!
   @IBOutlet weak var fragControlViewMiddleButtons2Constraint: NSLayoutConstraint!
 
-  var osdProgressBarWidthConstraint: NSLayoutConstraint!
-
   @IBOutlet weak var titleBarView: NSVisualEffectView!
   @IBOutlet weak var titleBarBottomBorder: NSBox!
+  @IBOutlet weak var titlebarOnTopButton: NSButton!
 
   @IBOutlet weak var controlBarFloating: ControlBarView!
   @IBOutlet weak var controlBarBottom: NSVisualEffectView!
@@ -397,6 +420,10 @@ class MainWindowController: PlayerWindowController {
   @IBOutlet var thumbnailPeekView: ThumbnailPeekView!
   @IBOutlet weak var additionalInfoView: NSVisualEffectView!
   @IBOutlet weak var additionalInfoLabel: NSTextField!
+  @IBOutlet weak var additionalInfoStackView: NSStackView!
+  @IBOutlet weak var additionalInfoTitle: NSTextField!
+  @IBOutlet weak var additionalInfoBatteryView: NSView!
+  @IBOutlet weak var additionalInfoBattery: NSTextField!
 
   @IBOutlet weak var oscFloatingTopView: NSStackView!
   @IBOutlet weak var oscFloatingBottomView: NSView!
@@ -417,7 +444,6 @@ class MainWindowController: PlayerWindowController {
   @IBOutlet weak var osdVisualEffectView: NSVisualEffectView!
   @IBOutlet weak var osdStackView: NSStackView!
   @IBOutlet weak var osdLabel: NSTextField!
-  @IBOutlet weak var osdAccessoryView: NSView!
   @IBOutlet weak var osdAccessoryText: NSTextField!
   @IBOutlet weak var osdAccessoryProgress: NSProgressIndicator!
 
@@ -427,6 +453,8 @@ class MainWindowController: PlayerWindowController {
 
   var videoViewConstraints: [NSLayoutConstraint.Attribute: NSLayoutConstraint] = [:]
   private var oscFloatingLeadingTrailingConstraint: [NSLayoutConstraint]?
+
+  override var mouseActionDisabledViews: [NSView?] {[sideBarView, currentControlBar, titleBarView, subPopoverView]}
 
   var danmakuWebView: DanmakuWebView!
   var danmakuWebViewConstraints: [NSLayoutConstraint.Attribute: NSLayoutConstraint] = [:]
@@ -459,6 +487,12 @@ class MainWindowController: PlayerWindowController {
 
     titleBarView.layerContentsRedrawPolicy = .onSetNeedsDisplay
 
+    titlebarAccesoryViewController = NSTitlebarAccessoryViewController()
+    titlebarAccesoryViewController.view = titlebarAccessoryView
+    titlebarAccesoryViewController.layoutAttribute = .right
+    window.addTitlebarAccessoryViewController(titlebarAccesoryViewController)
+    updateOnTopIcon()
+
     // size
     window.minSize = minSize
     if let wf = windowFrameFromGeometry() {
@@ -483,6 +517,7 @@ class MainWindowController: PlayerWindowController {
     // fade-able views
     fadeableViews.append(contentsOf: standardWindowButtons as [NSView])
     fadeableViews.append(titleBarView)
+    fadeableViews.append(titlebarAccessoryView)
 
     guard let cv = window.contentView else { return }
 
@@ -549,8 +584,6 @@ class MainWindowController: PlayerWindowController {
     timePreviewWhenSeek.isHidden = true
     bottomView.isHidden = true
     pipOverlayView.isHidden = true
-
-    osdProgressBarWidthConstraint = NSLayoutConstraint(item: osdAccessoryProgress as Any, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 150)
 
     // add user default observers
     observedPrefKeys.append(contentsOf: localObservedPrefKeys)
@@ -627,6 +660,7 @@ class MainWindowController: PlayerWindowController {
       button.tag = buttonType.rawValue
       button.translatesAutoresizingMaskIntoConstraints = false
       button.refusesFirstResponder = true
+      button.toolTip = buttonType.description()
       let buttonWidth = buttons.count == 5 ? "20" : "24"
       Utility.quickConstraints(["H:[btn(\(buttonWidth))]", "V:[btn(24)]"], ["btn": button])
       fragToolbarView.addView(button, in: .trailing)
@@ -837,20 +871,8 @@ class MainWindowController: PlayerWindowController {
         return
       }
 
-      guard !isMouseEvent(event, inAnyOf: [sideBarView, currentControlBar, titleBarView, subPopoverView]) else { return }
-      
       super.mouseUp(with: event)
     }
-  }
-
-  override func rightMouseUp(with event: NSEvent) {
-    guard !isMouseEvent(event, inAnyOf: [sideBarView, currentControlBar, titleBarView, subPopoverView]) else { return }
-    super.rightMouseUp(with: event)
-  }
-
-  override func otherMouseUp(with event: NSEvent) {
-    guard !isMouseEvent(event, inAnyOf: [sideBarView, currentControlBar, titleBarView, subPopoverView]) else { return }
-    super.otherMouseUp(with: event)
   }
 
   override internal func performMouseAction(_ action: Preference.MouseClickAction) {
@@ -860,6 +882,10 @@ class MainWindowController: PlayerWindowController {
       toggleWindowFullScreen()
     case .hideOSC:
       hideUI()
+    case .togglePIP:
+      if #available(macOS 10.12, *) {
+        menuTogglePIP(.dummy)
+      }
     default:
       break
     }
@@ -1128,8 +1154,9 @@ class MainWindowController: PlayerWindowController {
     }
     standardWindowButtons.forEach { $0.alphaValue = 0 }
     titleTextField?.alphaValue = 0
-
-    setWindowFloatingOnTop(false)
+    
+    window!.removeTitlebarAccessoryViewController(at: 0)
+    setWindowFloatingOnTop(false, updateOnTopStatus: false)
 
     thumbnailPeekView.isHidden = true
     timePreviewWhenSeek.isHidden = true
@@ -1235,8 +1262,9 @@ class MainWindowController: PlayerWindowController {
 
     // restore ontop status
     if player.info.isPlaying {
-      setWindowFloatingOnTop(isOntop)
+      setWindowFloatingOnTop(isOntop, updateOnTopStatus: false)
     }
+    window!.addTitlebarAccessoryViewController(titlebarAccesoryViewController)
 
     resetCollectionBehavior()
     updateWindowParametersForMPV()
@@ -1276,8 +1304,14 @@ class MainWindowController: PlayerWindowController {
     windowWillExitFullScreen(Notification(name: .iinaLegacyFullScreen))
     // stylemask
     window.styleMask.remove(.borderless)
-    window.styleMask.remove(.fullScreen)
-
+    if #available(macOS 10.16, *) {
+      window.styleMask.insert(.titled)
+      (window as! MainWindow).forceKeyAndMain = false
+      window.level = .normal
+    } else {
+      window.styleMask.remove(.fullScreen)
+    }
+ 
     restoreDockSettings()
     // restore window frame ans aspect ratio
     let videoSize = player.videoSizeForDisplay
@@ -1301,7 +1335,13 @@ class MainWindowController: PlayerWindowController {
     windowWillEnterFullScreen(Notification(name: .iinaLegacyFullScreen))
     // stylemask
     window.styleMask.insert(.borderless)
-    window.styleMask.insert(.fullScreen)
+    if #available(macOS 10.16, *) {
+      window.styleMask.remove(.titled)
+      (window as! MainWindow).forceKeyAndMain = true
+      window.level = .floating
+    } else {
+      window.styleMask.insert(.fullScreen)
+    }
     // cancel aspect ratio
     window.resizeIncrements = NSSize(width: 1, height: 1)
     // auto hide menubar and dock
@@ -1309,7 +1349,7 @@ class MainWindowController: PlayerWindowController {
     NSApp.presentationOptions.insert(.autoHideDock)
     // set frame
     let screen = window.screen ?? NSScreen.main!
-    window.setFrame(NSRect(origin: .zero, size: screen.frame.size), display: true, animate: true)
+    window.setFrame(screen.frame, display: true, animate: true)
     // call delegate
     windowDidEnterFullScreen(Notification(name: .iinaLegacyFullScreen))
   }
@@ -1571,10 +1611,15 @@ class MainWindowController: PlayerWindowController {
     addDocIconToFadeableViews()
   }
 
+  func updateOnTopIcon() {
+    titlebarOnTopButton.isHidden = Preference.bool(for: .alwaysShowOnTopIcon) ? false : !isOntop
+    titlebarOnTopButton.state = isOntop ? .on : .off
+  }
+
   // MARK: - UI: OSD
 
   // Do not call displayOSD directly, call PlayerCore.sendOSD instead.
-  func displayOSD(_ message: OSDMessage, autoHide: Bool = true, accessoryView: NSView? = nil) {
+  func displayOSD(_ message: OSDMessage, autoHide: Bool = true, forcedTimeout: Float? = nil, accessoryView: NSView? = nil, context: Any? = nil) {
     guard player.displayOSD && !isShowingPersistentOSD else { return }
 
     if hideOSDTimer != nil {
@@ -1582,25 +1627,23 @@ class MainWindowController: PlayerWindowController {
       hideOSDTimer = nil
     }
     osdAnimationState = .shown
-    [osdAccessoryText, osdAccessoryProgress].forEach { $0.isHidden = true }
 
     let (osdString, osdType) = message.message()
 
     let osdTextSize = Preference.float(for: .osdTextSize)
     osdLabel.font = NSFont.monospacedDigitSystemFont(ofSize: CGFloat(osdTextSize), weight: .regular)
+    osdAccessoryText.font = NSFont.monospacedDigitSystemFont(ofSize: CGFloat(osdTextSize * 0.5).clamped(to: 11...25), weight: .regular)
     osdLabel.stringValue = osdString
 
     switch osdType {
     case .normal:
-      osdStackView.setVisibilityPriority(.notVisible, for: osdAccessoryView)
+      osdStackView.setVisibilityPriority(.notVisible, for: osdAccessoryText)
+      osdStackView.setVisibilityPriority(.notVisible, for: osdAccessoryProgress)
     case .withProgress(let value):
-      NSLayoutConstraint.activate([osdProgressBarWidthConstraint])
-      osdStackView.setVisibilityPriority(.mustHold, for: osdAccessoryView)
-      osdAccessoryProgress.isHidden = false
+      osdStackView.setVisibilityPriority(.notVisible, for: osdAccessoryText)
+      osdStackView.setVisibilityPriority(.mustHold, for: osdAccessoryProgress)
       osdAccessoryProgress.doubleValue = value
     case .withText(let text):
-      NSLayoutConstraint.deactivate([osdProgressBarWidthConstraint])
-
       // data for mustache redering
       let osdData: [String: String] = [
         "duration": player.info.videoDuration?.stringRepresentation ?? Constants.String.videoTimePlaceholder,
@@ -1609,8 +1652,8 @@ class MainWindowController: PlayerWindowController {
         "chapterCount": player.info.chapters.count.description
       ]
 
-      osdStackView.setVisibilityPriority(.mustHold, for: osdAccessoryView)
-      osdAccessoryText.isHidden = false
+      osdStackView.setVisibilityPriority(.mustHold, for: osdAccessoryText)
+      osdStackView.setVisibilityPriority(.notVisible, for: osdAccessoryProgress)
       osdAccessoryText.stringValue = try! (try! Template(string: text)).render(osdData)
     }
 
@@ -1623,6 +1666,9 @@ class MainWindowController: PlayerWindowController {
     }
     if let accessoryView = accessoryView {
       isShowingPersistentOSD = true
+      if context != nil {
+        osdContext = context
+      }
 
       if #available(macOS 10.14, *) {} else {
         accessoryView.appearance = NSAppearance(named: .vibrantDark)
@@ -1655,7 +1701,7 @@ class MainWindowController: PlayerWindowController {
     }
 
     if autoHide {
-      let timeout = Preference.float(for: .osdAutoHideTimeout)
+      let timeout = forcedTimeout ?? Preference.float(for: .osdAutoHideTimeout)
       hideOSDTimer = Timer.scheduledTimer(timeInterval: TimeInterval(timeout), target: self, selector: #selector(self.hideOSD), userInfo: nil, repeats: false)
     }
   }
@@ -1669,9 +1715,22 @@ class MainWindowController: PlayerWindowController {
     }) {
       if self.osdAnimationState == .willHide {
         self.osdAnimationState = .hidden
+        self.osdStackView.views(in: .bottom).forEach { self.osdStackView.removeView($0) }
       }
     }
     isShowingPersistentOSD = false
+    osdContext = nil
+  }
+
+  func updateAdditionalInfo() {
+    additionalInfoLabel.stringValue = DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .short)
+    additionalInfoTitle.stringValue = window?.representedURL?.lastPathComponent ?? window?.title ?? ""
+    if let capacity = PowerSource.getList().filter({ $0.type == "InternalBattery" }).first?.currentCapacity {
+      additionalInfoBattery.stringValue = "\(capacity)%"
+      additionalInfoStackView.setVisibilityPriority(.mustHold, for: additionalInfoBatteryView)
+    } else {
+      additionalInfoStackView.setVisibilityPriority(.notVisible, for: additionalInfoBatteryView)
+    }
   }
 
   // MARK: - UI: Side bar
@@ -1785,6 +1844,7 @@ class MainWindowController: PlayerWindowController {
       return
     }
 
+    isPausedPriorToInteractiveMode = player.info.isPaused
     player.pause()
     isInInteractiveMode = true
     hideUI()
@@ -1865,7 +1925,9 @@ class MainWindowController: PlayerWindowController {
   func exitInteractiveMode(immediately: Bool = false, then: @escaping () -> Void = {}) {
     window?.backgroundColor = .black
 
-    player.resume()
+    if !isPausedPriorToInteractiveMode {
+      player.resume()
+    }
     isInInteractiveMode = false
     cropSettingsView?.cropBoxView.isHidden = true
 
@@ -1916,9 +1978,9 @@ class MainWindowController: PlayerWindowController {
       let previewTime = duration * percentage
       timePreviewWhenSeek.stringValue = previewTime.stringRepresentation
 
-      if player.info.thumbnailsReady, let tb = player.info.getThumbnail(forSecond: previewTime.second) {
+      if player.info.thumbnailsReady, let image = player.info.getThumbnail(forSecond: previewTime.second)?.image {
+        thumbnailPeekView.imageView.image = image.rotate(rotation)
         thumbnailPeekView.isHidden = false
-        thumbnailPeekView.imageView.image = tb.image
         let height = round(120 / thumbnailPeekView.imageView.image!.size.aspect)
         let yPos = (oscPosition == .top || (oscPosition == .floating && sliderFrameInWindow.y + 52 + height >= window!.frame.height)) ?
           sliderFrameInWindow.y - height : sliderFrameInWindow.y + 32
@@ -2190,12 +2252,11 @@ class MainWindowController: PlayerWindowController {
     blackWindows = []
   }
 
-  override func setWindowFloatingOnTop(_ onTop: Bool) {
+  override func setWindowFloatingOnTop(_ onTop: Bool, updateOnTopStatus: Bool = true) {
     guard !fsState.isFullscreen else { return }
-    super.setWindowFloatingOnTop(onTop)
+    super.setWindowFloatingOnTop(onTop, updateOnTopStatus: updateOnTopStatus)
 
     resetCollectionBehavior()
-
     // don't know why they will be disabled
     standardWindowButtons.forEach { $0.isEnabled = true }
   }
@@ -2364,6 +2425,10 @@ class MainWindowController: PlayerWindowController {
     }
   }
 
+  @IBAction func ontopButtonnAction(_ sender: NSButton) {
+    setWindowFloatingOnTop(!isOntop)
+  }
+
   /// Legacy IBAction, but still in use.
   func settingsButtonAction(_ sender: AnyObject) {
     if sidebarAnimationState == .willShow || sidebarAnimationState == .willHide {
@@ -2512,7 +2577,8 @@ extension MainWindowController: PIPViewControllerDelegate {
     // animation. By forcing a redraw it will keep its paused image throughout.
     // (At least) in 10.15, presentAsPictureInPicture: behaves asynchronously.
     // Therefore we should wait until the view is moved to the PIP superview.
-    if player.info.isPaused {
+    let currentTrackIsAlbumArt = player.info.currentTrack(.video)?.isAlbumart ?? false
+    if player.info.isPaused || currentTrackIsAlbumArt {
       videoView.pendingRedrawAfterEnteringPIP = true
     }
 
@@ -2561,7 +2627,8 @@ extension MainWindowController: PIPViewControllerDelegate {
     // are paused, because this causes a janky animation in either case but as
     // it's not necessary while the video is playing and significantly more
     // noticeable, we only redraw if we are paused.
-    if player.info.isPaused {
+    let currentTrackIsAlbumArt = player.info.currentTrack(.video)?.isAlbumart ?? false
+    if player.info.isPaused || currentTrackIsAlbumArt {
       videoView.videoLayer.draw(forced: true)
     }
 
