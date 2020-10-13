@@ -89,7 +89,7 @@ class MPVController: NSObject {
     MPVOption.Window.windowScale: MPV_FORMAT_DOUBLE,
     MPVProperty.mediaTitle: MPV_FORMAT_STRING,
     MPVProperty.videoParamsRotate: MPV_FORMAT_INT64,
-    MPVProperty.idleActive: MPV_FORMAT_FLAG
+    MPVProperty.idleActive: MPV_FORMAT_FLAG,
     MPVProperty.timePos: MPV_FORMAT_DOUBLE
   ]
 

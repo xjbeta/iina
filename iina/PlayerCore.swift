@@ -1367,7 +1367,7 @@ class PlayerCore: NSObject {
           self.touchBarSupport.updateTouchBarPlayBtn()
         }
         guard self.enableDanmaku else { return }
-        self.mainWindow.updateDanmakuStatus(pause)
+        self.mainWindow.updateDanmakuStatus(self.info.isPaused)
       }
 
     case .volume, .muteButton:
