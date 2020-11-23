@@ -424,6 +424,55 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       }
 
       Logger.log("Finished URL scheme handling")
+    } else if host == "iina-plus.base64" {
+      // open a file or link
+      
+      guard let query = parsed.query,
+            let queryData = Data(base64Encoded: query),
+            let dicStr = String(data: queryData, encoding: .utf8) else { return }
+      
+      let queries = dicStr.split(separator: "👻").map(String.init).compactMap { str -> (name: String, value: String)? in
+        let kv = str.split(separator: "=", maxSplits: 1, omittingEmptySubsequences: true).map(String.init)
+        guard kv.count > 0 else { return nil }
+        let name = kv[0]
+        let value = kv.count == 2 ? kv[1] : ""
+        return (name, value)
+      }
+      
+      let queryDict = [String: String](uniqueKeysWithValues: queries)
+
+      // url
+      guard let urlValue = queryDict["url"], !urlValue.isEmpty else {
+        Logger.log("Cannot find parameter \"url\", stopped")
+        return
+      }
+
+      let player = PlayerCore.newPlayerCore
+      
+      
+      player.enableDanmaku = queryDict["danmaku"] != nil
+      player.uuid = queryDict["uuid"] ?? ""
+      
+      Logger.log("Danamaku uuid: \(player.uuid)")
+      
+      // mpv options
+      
+      let options = queries.filter {
+        $0.name.hasPrefix("mpv_")
+      }.map {
+        (name: String($0.name.dropFirst(4)), value: $0.value)
+      }
+      
+      if queryDict["directly"] == nil {
+        player.openURLString(urlValue)
+        options.forEach {
+          player.mpv.setString($0.name, $0.value)
+        }
+      } else if let u = URL(string: urlValue) {
+        player.openURLDirect([u], args: options)
+      }
+      
+      Logger.log("Finished URL scheme handling")
     }
   }
 

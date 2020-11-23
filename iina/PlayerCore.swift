@@ -259,6 +259,8 @@ class PlayerCore: NSObject {
       mainWindow.windowDidOpen()
     }
     
+    mainWindow.initDanamaku()
+
     // Send load file command
     info.fileLoading = true
     info.justOpenedFile = true

@@ -520,31 +520,6 @@ class MainWindowController: PlayerWindowController {
     fadeableViews.append(titlebarAccessoryView)
 
     guard let cv = window.contentView else { return }
-
-    // danmaku view
-    if player.enableDanmaku {
-      Logger.log("Init Danmaku webView.")
-      danmakuWebView = DanmakuWebView()
-      danmakuWebView.navigationDelegate = self
-      
-      danmakuWebView.setValue(false, forKey: "drawsBackground")
-      danmakuWebView.configuration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
-      #if DEBUG
-      danmakuWebView.configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
-      #endif
-      if let url = URL(string: "http://127.0.0.1:19080/danmaku/index.htm") {
-        danmakuWebView.load(URLRequest(url: url))
-      }
-      
-      
-      cv.addSubview(danmakuWebView, positioned: .below, relativeTo: nil)
-      danmakuWebView.translatesAutoresizingMaskIntoConstraints = false
-      // add constraints
-      ([.top, .bottom, .left, .right] as [NSLayoutConstraint.Attribute]).forEach { attr in
-        danmakuWebViewConstraints[attr] = NSLayoutConstraint(item: danmakuWebView, attribute: attr, relatedBy: .equal, toItem: cv, attribute: attr, multiplier: 1, constant: 0)
-        danmakuWebViewConstraints[attr]!.isActive = true
-      }
-    }
     
     // video view
     cv.autoresizesSubviews = false
@@ -607,6 +582,47 @@ class MainWindowController: PlayerWindowController {
       // Update the cached value
       self.cachedScreenCount = screenCount
       self.videoView.updateDisplayLink()
+    }
+  }
+  
+  func initDanamaku() {
+    // danmaku view
+    guard let window = window,
+          let cv = window.contentView,
+          let url = URL(string: "http://127.0.0.1:19080/danmaku/index.htm") else { return }
+    danmakuFinishLoading = false
+    
+    if danmakuWebView != nil, player.enableDanmaku {
+      Logger.log("\(#function) reload.")
+      danmakuWebView.reload()
+    } else if danmakuWebView == nil, player.enableDanmaku {
+      Logger.log("\(#function) init.")
+      danmakuWebView = DanmakuWebView()
+      danmakuWebView.navigationDelegate = self
+      
+      danmakuWebView.setValue(false, forKey: "drawsBackground")
+      danmakuWebView.configuration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
+      #if DEBUG
+      danmakuWebView.configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
+      #endif
+      
+      danmakuWebView.load(URLRequest(url: url))
+      
+      cv.addSubview(danmakuWebView, positioned: .above, relativeTo: videoView)
+      danmakuWebView.translatesAutoresizingMaskIntoConstraints = false
+      // add constraints
+      ([.top, .bottom, .left, .right] as [NSLayoutConstraint.Attribute]).forEach { attr in
+        danmakuWebViewConstraints[attr] = NSLayoutConstraint(item: danmakuWebView!, attribute: attr, relatedBy: .equal, toItem: cv, attribute: attr, multiplier: 1, constant: 0)
+        danmakuWebViewConstraints[attr]!.isActive = true
+      }
+    } else if !player.enableDanmaku {
+      Logger.log("\(#function) stop.")
+      danmakuWebView?.stopLoading()
+      danmakuWebView?.navigationDelegate = nil
+      danmakuWebView = nil
+      cv.subviews.removeAll {
+        $0 is DanmakuWebView
+      }
     }
   }
 
@@ -2702,6 +2718,8 @@ extension MainWindowController: WKNavigationDelegate {
   func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
     Logger.log("Danmaku webView finish loading.")
     danmakuFinishLoading = true
+    Logger.log("initContent('\(player.uuid)');")
+    
     evaluateJavaScript("initContent('\(player.uuid)');")
   }
   
