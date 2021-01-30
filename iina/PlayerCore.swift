@@ -35,7 +35,11 @@ class PlayerCore: NSObject {
   }
 
   static var newPlayerCore: PlayerCore {
-    return findIdlePlayerCore() ?? createPlayerCore()
+    let pc = findIdlePlayerCore() ?? createPlayerCore()
+    pc.enableDanmaku = false
+    pc.uuid = ""
+    pc
+    return pc
   }
 
   static var activeOrNew: PlayerCore {

@@ -1083,6 +1083,8 @@ class MainWindowController: PlayerWindowController {
       p.lineBreakMode = .byTruncatingMiddle
       attrTitle.addAttribute(.paragraphStyle, value: p, range: NSRange(location: 0, length: attrTitle.length))
     }
+    
+    initDanamaku()
   }
 
   func windowWillClose(_ notification: Notification) {
@@ -1109,6 +1111,10 @@ class MainWindowController: PlayerWindowController {
     cv.trackingAreas.forEach(cv.removeTrackingArea)
     playSlider.trackingAreas.forEach(playSlider.removeTrackingArea)
     UserDefaults.standard.set(NSStringFromRect(window!.frame), forKey: "MainWindowLastPosition")
+    
+    // stop danmaku
+    player.enableDanmaku = false
+    initDanamaku()
   }
 
   // MARK: - Window delegate: Full screen
