@@ -589,7 +589,7 @@ class MainWindowController: PlayerWindowController {
     // danmaku view
     guard let window = window,
           let cv = window.contentView,
-          let url = URL(string: "http://127.0.0.1:19080/danmaku/index.htm") else { return }
+          let url = URL(string: "http://127.0.0.1:\(player.dmPort)/danmaku/index.htm") else { return }
     danmakuFinishLoading = false
     
     if danmakuWebView != nil, player.enableDanmaku {
@@ -2760,9 +2760,9 @@ extension MainWindowController: WKNavigationDelegate {
   func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
     Logger.log("Danmaku webView finish loading.")
     danmakuFinishLoading = true
-    Logger.log("initContent('\(player.uuid)');")
+    Logger.log("initContent('\(player.uuid)', '\(player.dmPort)');")
     
-    evaluateJavaScript("initContent('\(player.uuid)');")
+    evaluateJavaScript("initContent('\(player.uuid)', '\(player.dmPort)');")
   }
   
   func evaluateJavaScript(_ str: String) {

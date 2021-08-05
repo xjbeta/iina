@@ -38,7 +38,6 @@ class PlayerCore: NSObject {
     let pc = findIdlePlayerCore() ?? createPlayerCore()
     pc.enableDanmaku = false
     pc.uuid = ""
-    pc
     return pc
   }
 
@@ -145,6 +144,7 @@ class PlayerCore: NSObject {
   // Danmaku
   var enableDanmaku = false
   var uuid = ""
+  var dmPort = 19080
 
   static var keyBindings: [String: KeyMapping] = [:]
 

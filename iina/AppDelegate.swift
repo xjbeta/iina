@@ -453,7 +453,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       player.enableDanmaku = queryDict["danmaku"] != nil
       player.uuid = queryDict["uuid"] ?? ""
       
-      Logger.log("Danamaku uuid: \(player.uuid)")
+      if let port = queryDict["dmPort"],
+         let p = Int(port) {
+        player.dmPort = p
+      }
+      
+      Logger.log("Danamaku uuid: \(player.uuid), port: \(player.dmPort).")
       
       // mpv options
       
