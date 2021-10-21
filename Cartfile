@@ -1,0 +1,5 @@
+github "mxcl/PromiseKit"
+github "sparkle-project/Sparkle"
+github "1024jp/GzipSwift"
+github "groue/GRMustache.swift"
+github "dduan/Just"

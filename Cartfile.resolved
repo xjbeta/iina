@@ -1,0 +1,5 @@
+github "1024jp/GzipSwift" "5.1.1"
+github "dduan/Just" "0.8.0"
+github "groue/GRMustache.swift" "4.0.1"
+github "mxcl/PromiseKit" "6.16.0"
+github "sparkle-project/Sparkle" "1.27.0"
