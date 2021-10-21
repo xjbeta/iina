@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01A242F227211B7200198AD9 /* Cartfile in Resources */ = {isa = PBXBuildFile; fileRef = 01A242F127211B7200198AD9 /* Cartfile */; };
+		01A242F827211CD600198AD9 /* Sparkle.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A242F327211CD500198AD9 /* Sparkle.xcframework */; };
+		01A242F927211CD700198AD9 /* Sparkle.xcframework in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 01A242F327211CD500198AD9 /* Sparkle.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01A242FA27211CD800198AD9 /* Mustache.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A242F427211CD500198AD9 /* Mustache.xcframework */; };
+		01A242FB27211CD900198AD9 /* Mustache.xcframework in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 01A242F427211CD500198AD9 /* Mustache.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01A242FC27211CDA00198AD9 /* Gzip.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A242F527211CD500198AD9 /* Gzip.xcframework */; };
+		01A242FD27211CDB00198AD9 /* Gzip.xcframework in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 01A242F527211CD500198AD9 /* Gzip.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01A242FE27211CDC00198AD9 /* Just.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A242F627211CD600198AD9 /* Just.xcframework */; };
+		01A242FF27211CDD00198AD9 /* Just.xcframework in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 01A242F627211CD600198AD9 /* Just.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		01A2430027211CDE00198AD9 /* PromiseKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A242F727211CD600198AD9 /* PromiseKit.xcframework */; };
+		01A2430127211CDF00198AD9 /* PromiseKit.xcframework in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 01A242F727211CD600198AD9 /* PromiseKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		013850FE214FDEF1003817CE /* DanmakuWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013850FD214FDEF1003817CE /* DanmakuWebView.swift */; };
 		1326717E20852D0D000FA7E2 /* SubChooseViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1326718020852D0D000FA7E2 /* SubChooseViewController.xib */; };
 		49542975216C34950058F680 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49542974216C34950058F680 /* Cocoa.framework */; };
@@ -59,7 +70,6 @@
 		845040401E0ACADD0079C194 /* MPVNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8450403F1E0ACADD0079C194 /* MPVNode.swift */; };
 		845040471E0B0F500079C194 /* CropSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845040451E0B0F500079C194 /* CropSettingsViewController.swift */; };
 		8450404A1E0B13230079C194 /* CropBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845040491E0B13230079C194 /* CropBoxView.swift */; };
-		8451E6D92604AEFC009A15D7 /* Just in Frameworks */ = {isa = PBXBuildFile; productRef = 8451E6D82604AEFC009A15D7 /* Just */; };
 		8452DD851D3B956D008A543A /* Preference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8452DD841D3B956D008A543A /* Preference.swift */; };
 		845404AA1E4396F500B02B12 /* ScriptLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845404A91E4396F500B02B12 /* ScriptLoader.swift */; };
 		845404AC1E43980900B02B12 /* LuaScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845404AB1E43980900B02B12 /* LuaScript.swift */; };
@@ -155,10 +165,6 @@
 		84FBF23E1EF06A90003EA491 /* ThumbnailCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FBF23D1EF06A90003EA491 /* ThumbnailCache.swift */; };
 		8F49C36E213EFB7E0076C4F9 /* MiniPlayerWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8F49C370213EFB7E0076C4F9 /* MiniPlayerWindowController.xib */; };
 		9E47DAC01E3CFA6D00457420 /* DurationDisplayTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E47DABF1E3CFA6D00457420 /* DurationDisplayTextField.swift */; };
-		B4E446E825CB53920069F06E /* PromiseKit in Frameworks */ = {isa = PBXBuildFile; productRef = B4E446E725CB53920069F06E /* PromiseKit */; };
-		B4E446F225CB53FF0069F06E /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = B4E446F125CB53FF0069F06E /* Gzip */; };
-		B4E446F725CB54EF0069F06E /* Mustache in Frameworks */ = {isa = PBXBuildFile; productRef = B4E446F625CB54EF0069F06E /* Mustache */; };
-		B4E4470125CE3F930069F06E /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = B4E4470025CE3F930069F06E /* Sparkle */; };
 		C789872F1E34EF170005769F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C78987311E34EF170005769F /* InfoPlist.strings */; };
 		E301EFDA21312AB300BC8588 /* KeychainAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = E301EFD921312AB300BC8588 /* KeychainAccess.swift */; };
 		E322A4F820A8442E00C67D32 /* PlaylistPlaybackProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E322A4F720A8442E00C67D32 /* PlaylistPlaybackProgressView.swift */; };
@@ -380,6 +386,7 @@
 				E34C63A525B9220800DE53D2 /* libhogweed.6.dylib in Copy Dylibs */,
 				E34C63A625B9220800DE53D2 /* libidn2.0.dylib in Copy Dylibs */,
 				E34C63A725B9220800DE53D2 /* libintl.8.dylib in Copy Dylibs */,
+				01A242FF27211CDD00198AD9 /* Just.xcframework in Copy Dylibs */,
 				E34C63A825B9220800DE53D2 /* libjpeg.9.dylib in Copy Dylibs */,
 				E34C63A925B9220800DE53D2 /* liblcms2.2.dylib in Copy Dylibs */,
 				E34C63AA25B9220800DE53D2 /* liblept.5.dylib in Copy Dylibs */,
@@ -401,15 +408,19 @@
 				E34C63BA25B9220800DE53D2 /* libssl.1.1.dylib in Copy Dylibs */,
 				E34C63BB25B9220900DE53D2 /* libswresample.3.dylib in Copy Dylibs */,
 				E34C63BC25B9220900DE53D2 /* libswscale.5.dylib in Copy Dylibs */,
+				01A242FD27211CDB00198AD9 /* Gzip.xcframework in Copy Dylibs */,
 				E34C63BD25B9220900DE53D2 /* libtasn1.6.dylib in Copy Dylibs */,
 				E34C63BE25B9220900DE53D2 /* libtesseract.4.dylib in Copy Dylibs */,
 				E34C63BF25B9220900DE53D2 /* libtiff.5.dylib in Copy Dylibs */,
 				E34C63C025B9220900DE53D2 /* libuchardet.0.dylib in Copy Dylibs */,
 				E34C63C125B9220900DE53D2 /* libunistring.2.dylib in Copy Dylibs */,
+				01A242FB27211CD900198AD9 /* Mustache.xcframework in Copy Dylibs */,
 				E34C63C225B9220900DE53D2 /* libvidstab.1.1.dylib in Copy Dylibs */,
 				E34C63C325B9220900DE53D2 /* libwebp.7.dylib in Copy Dylibs */,
 				E34C63C425B9220900DE53D2 /* libwebpmux.3.dylib in Copy Dylibs */,
+				01A2430127211CDF00198AD9 /* PromiseKit.xcframework in Copy Dylibs */,
 				E34C63C525B9220900DE53D2 /* libzstd.1.dylib in Copy Dylibs */,
+				01A242F927211CD700198AD9 /* Sparkle.xcframework in Copy Dylibs */,
 				E34C63C625B9220900DE53D2 /* libmujs.so in Copy Dylibs */,
 			);
 			name = "Copy Dylibs";
@@ -451,6 +462,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		01A242F127211B7200198AD9 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = SOURCE_ROOT; };
+		01A242F327211CD500198AD9 /* Sparkle.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Sparkle.xcframework; path = Carthage/Build/Sparkle.xcframework; sourceTree = "<group>"; };
+		01A242F427211CD500198AD9 /* Mustache.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Mustache.xcframework; path = Carthage/Build/Mustache.xcframework; sourceTree = "<group>"; };
+		01A242F527211CD500198AD9 /* Gzip.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Gzip.xcframework; path = Carthage/Build/Gzip.xcframework; sourceTree = "<group>"; };
+		01A242F627211CD600198AD9 /* Just.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Just.xcframework; path = Carthage/Build/Just.xcframework; sourceTree = "<group>"; };
+		01A242F727211CD600198AD9 /* PromiseKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PromiseKit.xcframework; path = Carthage/Build/PromiseKit.xcframework; sourceTree = "<group>"; };
 		013850FD214FDEF1003817CE /* DanmakuWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuWebView.swift; sourceTree = "<group>"; };
 		1326717F20852D0D000FA7E2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SubChooseViewController.xib; sourceTree = "<group>"; };
 		133400111EB3831C007FE17E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/MainMenu.strings; sourceTree = "<group>"; };
@@ -1525,17 +1542,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B4E4470125CE3F930069F06E /* Sparkle in Frameworks */,
 				84279D7525B6DF59003B008B /* libdav1d.5.dylib in Frameworks */,
 				E3B25F5724FF505D0068B9B0 /* libp11-kit.0.dylib in Frameworks */,
 				E3B25F6124FF505D0068B9B0 /* libpostproc.55.dylib in Frameworks */,
-				8451E6D92604AEFC009A15D7 /* Just in Frameworks */,
 				E3B25F4024FF505D0068B9B0 /* libgnutls.30.dylib in Frameworks */,
 				E3B25F6324FF505D0068B9B0 /* libcrypto.1.1.dylib in Frameworks */,
 				E3B25F6924FF505D0068B9B0 /* libavformat.58.dylib in Frameworks */,
 				E3B25F4C24FF505D0068B9B0 /* libvidstab.1.1.dylib in Frameworks */,
 				E3B25F7524FF505E0068B9B0 /* libavfilter.7.dylib in Frameworks */,
+				01A2430027211CDE00198AD9 /* PromiseKit.xcframework in Frameworks */,
 				E3B25F5E24FF505D0068B9B0 /* libglib-2.0.0.dylib in Frameworks */,
+				01A242FE27211CDC00198AD9 /* Just.xcframework in Frameworks */,
 				E3B25F7224FF505E0068B9B0 /* libffi.7.dylib in Frameworks */,
 				E3B25F4D24FF505D0068B9B0 /* libsoxr.0.dylib in Frameworks */,
 				E3B25F5024FF505D0068B9B0 /* libnettle.8.dylib in Frameworks */,
@@ -1549,7 +1566,6 @@
 				E3B25F5124FF505D0068B9B0 /* libidn2.0.dylib in Frameworks */,
 				496B19921E2968530035AF10 /* PIP.framework in Frameworks */,
 				8403CEA72007CBD400645516 /* MediaPlayer.framework in Frameworks */,
-				B4E446F225CB53FF0069F06E /* Gzip in Frameworks */,
 				E3B25F4424FF505D0068B9B0 /* libb2.1.dylib in Frameworks */,
 				E3B25F4624FF505D0068B9B0 /* libhogweed.6.dylib in Frameworks */,
 				E3B25F6A24FF505D0068B9B0 /* libtesseract.4.dylib in Frameworks */,
@@ -1558,10 +1574,10 @@
 				E3B25F6E24FF505D0068B9B0 /* liblzma.5.dylib in Frameworks */,
 				E3B25F4E24FF505D0068B9B0 /* liblcms2.2.dylib in Frameworks */,
 				E3B25F6F24FF505E0068B9B0 /* libjpeg.9.dylib in Frameworks */,
-				B4E446E825CB53920069F06E /* PromiseKit in Frameworks */,
 				E3B25F5F24FF505D0068B9B0 /* librubberband.2.dylib in Frameworks */,
 				E3B25F7124FF505E0068B9B0 /* libzstd.1.dylib in Frameworks */,
 				E3B25F6C24FF505D0068B9B0 /* libfontconfig.1.dylib in Frameworks */,
+				01A242F827211CD600198AD9 /* Sparkle.xcframework in Frameworks */,
 				E3B25F5A24FF505D0068B9B0 /* libavdevice.58.dylib in Frameworks */,
 				E3B25F5924FF505D0068B9B0 /* libwebpmux.3.dylib in Frameworks */,
 				E3B25F6B24FF505D0068B9B0 /* libpng16.16.dylib in Frameworks */,
@@ -1569,11 +1585,12 @@
 				E3B25F4924FF505D0068B9B0 /* libtasn1.6.dylib in Frameworks */,
 				E3B25F6D24FF505D0068B9B0 /* liblua.5.1.dylib in Frameworks */,
 				E3B25F4824FF505D0068B9B0 /* libunistring.2.dylib in Frameworks */,
+				01A242FA27211CD800198AD9 /* Mustache.xcframework in Frameworks */,
 				E3B25F4B24FF505D0068B9B0 /* libuchardet.0.dylib in Frameworks */,
-				B4E446F725CB54EF0069F06E /* Mustache in Frameworks */,
 				E3B25F6724FF505D0068B9B0 /* libintl.8.dylib in Frameworks */,
 				E3B25F5B24FF505D0068B9B0 /* libharfbuzz.0.dylib in Frameworks */,
 				E3B25F4724FF505D0068B9B0 /* liblept.5.dylib in Frameworks */,
+				01A242FC27211CDA00198AD9 /* Gzip.xcframework in Frameworks */,
 				E3B25F7424FF505E0068B9B0 /* libavcodec.58.dylib in Frameworks */,
 				E3B25F6024FF505D0068B9B0 /* liblz4.1.dylib in Frameworks */,
 				E3B25F4F24FF505D0068B9B0 /* libgmp.10.dylib in Frameworks */,
@@ -1696,6 +1713,11 @@
 		848290731D95978100C3C76C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				01A242F527211CD500198AD9 /* Gzip.xcframework */,
+				01A242F627211CD600198AD9 /* Just.xcframework */,
+				01A242F427211CD500198AD9 /* Mustache.xcframework */,
+				01A242F727211CD600198AD9 /* PromiseKit.xcframework */,
+				01A242F327211CD500198AD9 /* Sparkle.xcframework */,
 				E3B25F2524FF505A0068B9B0 /* libarchive.13.dylib */,
 				E3B25F3C24FF505D0068B9B0 /* libass.9.dylib */,
 				E3B25F3D24FF505D0068B9B0 /* libavcodec.58.dylib */,
@@ -1763,6 +1785,7 @@
 		84A0BAA21D2FAE8200BC8DA1 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				01A242F127211B7200198AD9 /* Cartfile */,
 				E393669923BDD1850070D626 /* IINA.entitlements */,
 				6100FF2A1EDF9806002CF0FB /* dsa_pub.pem */,
 				C78987311E34EF170005769F /* InfoPlist.strings */,
@@ -2270,11 +2293,6 @@
 			);
 			name = iina;
 			packageProductDependencies = (
-				B4E446E725CB53920069F06E /* PromiseKit */,
-				B4E446F125CB53FF0069F06E /* Gzip */,
-				B4E446F625CB54EF0069F06E /* Mustache */,
-				B4E4470025CE3F930069F06E /* Sparkle */,
-				8451E6D82604AEFC009A15D7 /* Just */,
 			);
 			productName = mpvx;
 			productReference = 84EB1ED61D2F51D3004FA5A1 /* IINA.app */;
@@ -2304,7 +2322,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1300;
 				ORGANIZATIONNAME = lhc;
 				TargetAttributes = {
 					49542972216C34950058F680 = {
@@ -2356,11 +2374,6 @@
 			);
 			mainGroup = 84EB1ECD1D2F51D3004FA5A1;
 			packageReferences = (
-				B4E446E625CB53920069F06E /* XCRemoteSwiftPackageReference "PromiseKit" */,
-				B4E446F025CB53FF0069F06E /* XCRemoteSwiftPackageReference "GzipSwift" */,
-				B4E446F525CB54EF0069F06E /* XCRemoteSwiftPackageReference "GRMustache" */,
-				B4E446FF25CE3F930069F06E /* XCRemoteSwiftPackageReference "Sparkle" */,
-				8451E6D72604AEFC009A15D7 /* XCRemoteSwiftPackageReference "Just" */,
 			);
 			productRefGroup = 84EB1ED71D2F51D3004FA5A1 /* Products */;
 			projectDirPath = "";
@@ -2406,6 +2419,7 @@
 				84A0BA951D2F9E9600BC8DA1 /* MainMenu.xib in Resources */,
 				8400D5D81E1AB31B006785F5 /* AboutWindowController.xib in Resources */,
 				8400D5F31E1AB348006785F5 /* PrefSubViewController.xib in Resources */,
+				01A242F227211B7200198AD9 /* Cartfile in Resources */,
 				E3DBD239218B057A00B3AFBF /* Translators.json in Resources */,
 				84D0FB821F5E6A3800C6A6A7 /* FreeSelectingViewController.xib in Resources */,
 				8400D5E11E1AB32F006785F5 /* PrefUIViewController.xib in Resources */,
@@ -3595,6 +3609,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = OpenInIINA/OpenInIINA.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -3626,6 +3641,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = OpenInIINA/OpenInIINA.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -3672,6 +3688,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -3732,6 +3749,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -3857,7 +3875,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 67CQ77V27R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -3880,7 +3898,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 67CQ77V27R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -3937,77 +3955,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		8451E6D72604AEFC009A15D7 /* XCRemoteSwiftPackageReference "Just" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/dduan/Just";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.8.0;
-			};
-		};
-		B4E446E625CB53920069F06E /* XCRemoteSwiftPackageReference "PromiseKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/mxcl/PromiseKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.13.3;
-			};
-		};
-		B4E446F025CB53FF0069F06E /* XCRemoteSwiftPackageReference "GzipSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/1024jp/GzipSwift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.1.1;
-			};
-		};
-		B4E446F525CB54EF0069F06E /* XCRemoteSwiftPackageReference "GRMustache" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/groue/GRMustache.swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.1;
-			};
-		};
-		B4E446FF25CE3F930069F06E /* XCRemoteSwiftPackageReference "Sparkle" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sparkle-project/Sparkle/";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = "1.25.0-rc2";
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		8451E6D82604AEFC009A15D7 /* Just */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8451E6D72604AEFC009A15D7 /* XCRemoteSwiftPackageReference "Just" */;
-			productName = Just;
-		};
-		B4E446E725CB53920069F06E /* PromiseKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B4E446E625CB53920069F06E /* XCRemoteSwiftPackageReference "PromiseKit" */;
-			productName = PromiseKit;
-		};
-		B4E446F125CB53FF0069F06E /* Gzip */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B4E446F025CB53FF0069F06E /* XCRemoteSwiftPackageReference "GzipSwift" */;
-			productName = Gzip;
-		};
-		B4E446F625CB54EF0069F06E /* Mustache */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B4E446F525CB54EF0069F06E /* XCRemoteSwiftPackageReference "GRMustache" */;
-			productName = Mustache;
-		};
-		B4E4470025CE3F930069F06E /* Sparkle */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B4E446FF25CE3F930069F06E /* XCRemoteSwiftPackageReference "Sparkle" */;
-			productName = Sparkle;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 84EB1ECE1D2F51D3004FA5A1 /* Project object */;
 }
