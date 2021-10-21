@@ -410,7 +410,11 @@ class MPVController: NSObject {
     guard mpv != nil else { return }
     var cargs = makeCArgs(command, args).map { $0.flatMap { UnsafePointer<CChar>(strdup($0)) } }
     defer {
-      for ptr in cargs { free(UnsafeMutablePointer(mutating: ptr)) }
+      cargs.compactMap {
+        $0
+      }.forEach {
+        free(UnsafeMutablePointer(mutating: $0))
+      }
     }
     let returnValue = mpv_command(self.mpv, &cargs)
     if checkError {
@@ -428,7 +432,11 @@ class MPVController: NSObject {
     guard mpv != nil else { return }
     var cargs = makeCArgs(command, args).map { $0.flatMap { UnsafePointer<CChar>(strdup($0)) } }
     defer {
-      for ptr in cargs { free(UnsafeMutablePointer(mutating: ptr)) }
+      cargs.compactMap {
+        $0
+      }.forEach {
+        free(UnsafeMutablePointer(mutating: $0))
+      }
     }
     let returnValue = mpv_command_async(self.mpv, replyUserdata, &cargs)
     if checkError {
