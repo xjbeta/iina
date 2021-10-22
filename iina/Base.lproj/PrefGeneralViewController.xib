@@ -107,7 +107,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <binding destination="7jz-PW-fuz" name="value" keyPath="automaticallyChecksForUpdates" id="eyv-rg-N7I"/>
+                        <binding destination="7jz-PW-fuz" name="value" keyPath="updater.automaticallyChecksForUpdates" id="Wr5-43-buH"/>
                     </connections>
                 </button>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="6Hg-O4-cBP">
@@ -158,8 +158,8 @@
                         </menu>
                     </popUpButtonCell>
                     <connections>
-                        <binding destination="7jz-PW-fuz" name="enabled" keyPath="automaticallyChecksForUpdates" id="IAt-xU-SK7"/>
-                        <binding destination="7jz-PW-fuz" name="selectedTag" keyPath="updateCheckInterval" id="DVF-Pp-2HC"/>
+                        <binding destination="7jz-PW-fuz" name="enabled" keyPath="updater.automaticallyChecksForUpdates" id="KcW-o8-7sJ"/>
+                        <binding destination="7jz-PW-fuz" name="selectedTag" keyPath="updater.updateCheckInterval" id="GdC-Uw-zRL"/>
                     </connections>
                 </popUpButton>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="b7I-2V-MYa">
@@ -441,7 +441,7 @@
             <point key="canvasLocation" x="-2189" y="118.5"/>
         </customView>
         <userDefaultsController representsSharedInstance="YES" id="IBP-Mz-Maa"/>
-        <customObject id="7jz-PW-fuz" customClass="SUUpdater"/>
+        <customObject id="7jz-PW-fuz" customClass="SPUStandardUpdaterController"/>
         <customView id="y7O-rd-dnT">
             <rect key="frame" x="0.0" y="0.0" width="580" height="114"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>

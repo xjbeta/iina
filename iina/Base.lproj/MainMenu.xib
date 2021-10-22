@@ -34,7 +34,11 @@
                             <menuItem title="Check for Updates..." id="gMo-qL-m08">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="checkForUpdates:" target="wTK-gz-aTs" id="MFD-wN-SXh"/>
+                                    <binding destination="wTK-gz-aTs" name="target" keyPath="self.updater" id="9JH-ZO-TnS">
+                                        <dictionary key="options">
+                                            <string key="NSSelectorName">checkForUpdates</string>
+                                        </dictionary>
+                                    </binding>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
@@ -787,6 +791,6 @@ CA
             </items>
             <point key="canvasLocation" x="18.5" y="678.5"/>
         </menu>
-        <customObject id="wTK-gz-aTs" customClass="SUUpdater"/>
+        <customObject id="wTK-gz-aTs" customClass="SPUStandardUpdaterController"/>
     </objects>
 </document>

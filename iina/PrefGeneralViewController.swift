@@ -63,7 +63,9 @@ class PrefGeneralViewController: PreferenceViewController, PreferenceWindowEmbed
   }
 
   @IBAction func receiveBetaUpdatesChanged(_ sender: NSButton) {
-    SUUpdater.shared().feedURL = URL(string: sender.state == .on ? AppData.appcastBetaLink : AppData.appcastLink)!
+    let feedURL = URL(string: sender.state == .on ? AppData.appcastBetaLink : AppData.appcastLink)!
+    
+    (NSApp.delegate as? AppDelegate)?.updaterController.updater.setFeedURL(feedURL)
   }
 
 }

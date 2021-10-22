@@ -21,6 +21,9 @@ fileprivate let AlternativeMenuItemTag = 1
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
+  // Sparkle
+  let updaterController = SPUStandardUpdaterController(startingUpdater: false, updaterDelegate: nil, userDriverDelegate: nil)
+  
   /** Whether performed some basic initialization, like bind menu items. */
   var isReady = false
   /**
@@ -100,7 +103,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       guideWindow.show(pages: [.highlights])
     }
 
-    SUUpdater.shared().feedURL = URL(string: Preference.bool(for: .receiveBetaUpdate) ? AppData.appcastBetaLink : AppData.appcastLink)!
+    let feedURL = URL(string: Preference.bool(for: .receiveBetaUpdate) ? AppData.appcastBetaLink : AppData.appcastLink)!
+    updaterController.updater.setFeedURL(feedURL)
 
     // handle arguments
     let arguments = ProcessInfo.processInfo.arguments.dropFirst()
