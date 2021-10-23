@@ -495,11 +495,9 @@
 		</dict>
 	</array>
 	<key>SUFeedURL</key>
-	<string>https://www.iina.io/appcast.xml</string>
-	<key>SUPublicDSAKeyFile</key>
-	<string>dsa_pub.pem</string>
+	<string>https://raw.githubusercontent.com/xjbeta/AppUpdaterAppcasts/master/IINA-Danmaku/Appcast.xml</string>
 	<key>SUPublicEDKey</key>
-	<string>UpwCRYfYOg0OGgQHY6RUdrV29yPcdkvxGlEfq46r6a0=</string>
+	<string>1u1lOVNGnwTyXSIVYlfz+in5LmD7F2MPDCYWEYnwlJQ=</string>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>

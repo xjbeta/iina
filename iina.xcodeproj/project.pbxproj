@@ -158,7 +158,6 @@
 		49542982216C34950058F680 /* ToolbarItemIcon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 49542981216C34950058F680 /* ToolbarItemIcon.pdf */; };
 		49542986216C34950058F680 /* OpenInIINA.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 49542973216C34950058F680 /* OpenInIINA.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		496B19921E2968530035AF10 /* PIP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 496B19911E2968530035AF10 /* PIP.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		6100FF2B1EDF9806002CF0FB /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 6100FF2A1EDF9806002CF0FB /* dsa_pub.pem */; };
 		8400D5C41E17C6D2006785F5 /* AboutWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8400D5C21E17C6D2006785F5 /* AboutWindowController.swift */; };
 		8400D5C61E1AB2F1006785F5 /* MainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8400D5C81E1AB2F1006785F5 /* MainWindowController.xib */; };
 		8400D5C91E1AB2F9006785F5 /* QuickSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8400D5CB1E1AB2F9006785F5 /* QuickSettingViewController.xib */; };
@@ -683,7 +682,6 @@
 		5EF9F80221FB439200748374 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = "pt-BR"; path = "pt-BR.lproj/Contribution.rtf"; sourceTree = "<group>"; };
 		5EF9F80321FB43EA00748374 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/FilterPresets.strings"; sourceTree = "<group>"; };
 		5EF9F80421FB448700748374 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/KeyBinding.strings"; sourceTree = "<group>"; };
-		6100FF2A1EDF9806002CF0FB /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		649AD3111F11B06D00244738 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/MainMenu.strings; sourceTree = "<group>"; };
 		649AD3121F11B06D00244738 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/MainWindowController.strings; sourceTree = "<group>"; };
 		649AD3131F11B06D00244738 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/QuickSettingViewController.strings; sourceTree = "<group>"; };
@@ -1847,7 +1845,6 @@
 			children = (
 				01A242F127211B7200198AD9 /* Cartfile */,
 				E393669923BDD1850070D626 /* IINA.entitlements */,
-				6100FF2A1EDF9806002CF0FB /* dsa_pub.pem */,
 				C78987311E34EF170005769F /* InfoPlist.strings */,
 				84E745D71DFDE8C100588DED /* config */,
 				84EB1EDB1D2F51D3004FA5A1 /* Assets.xcassets */,
@@ -2493,7 +2490,6 @@
 				8400D5CC1E1AB2FF006785F5 /* PlaylistViewController.xib in Resources */,
 				8400D5ED1E1AB33F006785F5 /* PrefAdvancedViewController.xib in Resources */,
 				8400D5CF1E1AB306006785F5 /* CropSettingsViewController.xib in Resources */,
-				6100FF2B1EDF9806002CF0FB /* dsa_pub.pem in Resources */,
 				849581F31F03D55A00D3B359 /* InitialWindowController.xib in Resources */,
 				845AC09C1E1AE6C10080B614 /* Localizable.strings in Resources */,
 				8400D5F61E1AB34D006785F5 /* PrefNetworkViewController.xib in Resources */,

@@ -103,7 +103,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       guideWindow.show(pages: [.highlights])
     }
 
-    let feedURL = URL(string: Preference.bool(for: .receiveBetaUpdate) ? AppData.appcastBetaLink : AppData.appcastLink)!
+    let feedURL = URL(string: AppData.appcastDanmakuLink)!
     updaterController.updater.setFeedURL(feedURL)
 
     // handle arguments
