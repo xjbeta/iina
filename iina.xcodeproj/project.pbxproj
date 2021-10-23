@@ -2341,6 +2341,7 @@
 				84E745DA1DFDE9C600588DED /* Copy Configs */,
 				8461BA631E423423008BB852 /* Copy Executables */,
 				4954298A216C34960058F680 /* Embed App Extensions */,
+				0129B0D72723CB3F00712241 /* Build number Script */,
 			);
 			buildRules = (
 			);
@@ -2505,6 +2506,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0129B0D72723CB3F00712241 /* Build number Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build number Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/bash\nBUILD_NUMBER=`git rev-list --count origin/master...danmaku`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $BUILD_NUMBER\" \"${TARGET_BUILD_DIR}\"/\"${INFOPLIST_PATH}\"\n";
+		};
 		84B1CE561F98CAE300994D63 /* Copy Dylib Symlinks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
