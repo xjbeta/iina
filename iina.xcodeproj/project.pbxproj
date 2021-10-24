@@ -139,6 +139,8 @@
 		010B68F027215447002FEF8E /* libxcb-shape.0.dylib in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 010B686D27215420002FEF8E /* libxcb-shape.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		010B68F127215448002FEF8E /* libvidstab.1.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 010B686E27215420002FEF8E /* libvidstab.1.1.dylib */; };
 		010B68F227215448002FEF8E /* libvidstab.1.1.dylib in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 010B686E27215420002FEF8E /* libvidstab.1.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		0129B0DC2723E5C000712241 /* Alamofire.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0129B0DB2723E5C000712241 /* Alamofire.xcframework */; };
+		0129B0DD2723E5C100712241 /* Alamofire.xcframework in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 0129B0DB2723E5C000712241 /* Alamofire.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		013850FE214FDEF1003817CE /* DanmakuWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013850FD214FDEF1003817CE /* DanmakuWebView.swift */; };
 		01A242F227211B7200198AD9 /* Cartfile in Resources */ = {isa = PBXBuildFile; fileRef = 01A242F127211B7200198AD9 /* Cartfile */; };
 		01A242F827211CD600198AD9 /* Sparkle.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A242F327211CD500198AD9 /* Sparkle.xcframework */; };
@@ -147,8 +149,6 @@
 		01A242FB27211CD900198AD9 /* Mustache.xcframework in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 01A242F427211CD500198AD9 /* Mustache.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		01A242FC27211CDA00198AD9 /* Gzip.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A242F527211CD500198AD9 /* Gzip.xcframework */; };
 		01A242FD27211CDB00198AD9 /* Gzip.xcframework in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 01A242F527211CD500198AD9 /* Gzip.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		01A242FE27211CDC00198AD9 /* Just.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A242F627211CD600198AD9 /* Just.xcframework */; };
-		01A242FF27211CDD00198AD9 /* Just.xcframework in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 01A242F627211CD600198AD9 /* Just.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		01A2430027211CDE00198AD9 /* PromiseKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A242F727211CD600198AD9 /* PromiseKit.xcframework */; };
 		01A2430127211CDF00198AD9 /* PromiseKit.xcframework in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 01A242F727211CD600198AD9 /* PromiseKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1326717E20852D0D000FA7E2 /* SubChooseViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1326718020852D0D000FA7E2 /* SubChooseViewController.xib */; };
@@ -394,9 +394,9 @@
 				010B68E02721543F002FEF8E /* libtiff.5.dylib in Copy Dylibs */,
 				010B68A62721542A002FEF8E /* libssl.1.1.dylib in Copy Dylibs */,
 				010B68F227215448002FEF8E /* libvidstab.1.1.dylib in Copy Dylibs */,
+				0129B0DD2723E5C100712241 /* Alamofire.xcframework in Copy Dylibs */,
 				010B687427215421002FEF8E /* libmujs.so in Copy Dylibs */,
 				010B687227215421002FEF8E /* libavformat.58.dylib in Copy Dylibs */,
-				01A242FF27211CDD00198AD9 /* Just.xcframework in Copy Dylibs */,
 				010B68DC2721543E002FEF8E /* libavcodec.58.dylib in Copy Dylibs */,
 				01A242FD27211CDB00198AD9 /* Gzip.xcframework in Copy Dylibs */,
 				010B68B82721542F002FEF8E /* libluajit-5.1.2.dylib in Copy Dylibs */,
@@ -557,12 +557,12 @@
 		010B686C27215420002FEF8E /* libpng16.16.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng16.16.dylib; path = deps/lib/libpng16.16.dylib; sourceTree = "<group>"; };
 		010B686D27215420002FEF8E /* libxcb-shape.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libxcb-shape.0.dylib"; path = "deps/lib/libxcb-shape.0.dylib"; sourceTree = "<group>"; };
 		010B686E27215420002FEF8E /* libvidstab.1.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libvidstab.1.1.dylib; path = deps/lib/libvidstab.1.1.dylib; sourceTree = "<group>"; };
+		0129B0DB2723E5C000712241 /* Alamofire.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Alamofire.xcframework; path = Carthage/Build/Alamofire.xcframework; sourceTree = "<group>"; };
 		013850FD214FDEF1003817CE /* DanmakuWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuWebView.swift; sourceTree = "<group>"; };
 		01A242F127211B7200198AD9 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = SOURCE_ROOT; };
 		01A242F327211CD500198AD9 /* Sparkle.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Sparkle.xcframework; path = Carthage/Build/Sparkle.xcframework; sourceTree = "<group>"; };
 		01A242F427211CD500198AD9 /* Mustache.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Mustache.xcframework; path = Carthage/Build/Mustache.xcframework; sourceTree = "<group>"; };
 		01A242F527211CD500198AD9 /* Gzip.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Gzip.xcframework; path = Carthage/Build/Gzip.xcframework; sourceTree = "<group>"; };
-		01A242F627211CD600198AD9 /* Just.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Just.xcframework; path = Carthage/Build/Just.xcframework; sourceTree = "<group>"; };
 		01A242F727211CD600198AD9 /* PromiseKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = PromiseKit.xcframework; path = Carthage/Build/PromiseKit.xcframework; sourceTree = "<group>"; };
 		1326717F20852D0D000FA7E2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SubChooseViewController.xib; sourceTree = "<group>"; };
 		133400111EB3831C007FE17E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/MainMenu.strings; sourceTree = "<group>"; };
@@ -1609,7 +1609,6 @@
 				010B68A327215429002FEF8E /* libsoxr.0.dylib in Frameworks */,
 				010B688727215423002FEF8E /* libgnutls.30.dylib in Frameworks */,
 				010B68A72721542A002FEF8E /* libXdmcp.6.dylib in Frameworks */,
-				01A242FE27211CDC00198AD9 /* Just.xcframework in Frameworks */,
 				010B688127215422002FEF8E /* libharfbuzz.0.dylib in Frameworks */,
 				010B687127215420002FEF8E /* libavformat.58.dylib in Frameworks */,
 				010B68B32721542E002FEF8E /* libsnappy.1.dylib in Frameworks */,
@@ -1618,6 +1617,7 @@
 				010B68C527215434002FEF8E /* liblzma.5.dylib in Frameworks */,
 				010B68CF27215438002FEF8E /* libzmq.5.dylib in Frameworks */,
 				8403CEA72007CBD400645516 /* MediaPlayer.framework in Frameworks */,
+				0129B0DC2723E5C000712241 /* Alamofire.xcframework in Frameworks */,
 				010B68CB27215436002FEF8E /* libidn2.0.dylib in Frameworks */,
 				010B688527215423002FEF8E /* libnettle.8.dylib in Frameworks */,
 				010B68C327215433002FEF8E /* libb2.1.dylib in Frameworks */,
@@ -1761,6 +1761,7 @@
 		848290731D95978100C3C76C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0129B0DB2723E5C000712241 /* Alamofire.xcframework */,
 				010B68412721541D002FEF8E /* libarchive.13.dylib */,
 				010B686A27215420002FEF8E /* libass.9.dylib */,
 				010B68632721541F002FEF8E /* libavcodec.58.dylib */,
@@ -1828,7 +1829,6 @@
 				010B685D2721541F002FEF8E /* libzmq.5.dylib */,
 				010B68462721541D002FEF8E /* libzstd.1.dylib */,
 				01A242F527211CD500198AD9 /* Gzip.xcframework */,
-				01A242F627211CD600198AD9 /* Just.xcframework */,
 				01A242F427211CD500198AD9 /* Mustache.xcframework */,
 				01A242F727211CD600198AD9 /* PromiseKit.xcframework */,
 				01A242F327211CD500198AD9 /* Sparkle.xcframework */,
