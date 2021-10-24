@@ -7,7 +7,7 @@
 //
 
 import Cocoa
-import Just
+import Alamofire
 
 class AboutWindowContributorAvatarItem: NSCollectionViewItem {
 
@@ -32,8 +32,8 @@ class AboutWindowContributorAvatarItem: NSCollectionViewItem {
       if let data = AboutWindowContributorAvatarItem.imageCache.object(forKey: url as NSString) {
         self.imageView!.image = data
       } else {
-        Just.get(url) { respond in
-          guard let data = respond.content, var image = NSImage(data: data) else { return }
+        AF.request(url).response {
+          guard let data = $0.data, var image = NSImage(data: data) else { return }
           image = image.rounded()
           DispatchQueue.main.async {
             self.imageView!.image = image
