@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Just
+import Alamofire
 import PromiseKit
 
 fileprivate let subsystem = Logger.Subsystem(rawValue: "assrt")
@@ -52,8 +52,8 @@ final class AssrtSubtitle: OnlineSubtitle {
       // download from file list
       when(fulfilled: fileList.map { file -> Promise<URL> in
         Promise { resolver in
-          Just.get(file.url) { response in
-            guard response.ok, let data = response.content else {
+          AF.request(file.url).response {
+            guard $0.error == nil, let data = $0.data else {
               resolver.reject(AssrtSupport.AssrtError.networkError)
               return
             }
@@ -70,8 +70,8 @@ final class AssrtSubtitle: OnlineSubtitle {
       }
     } else if let url = url, let filename = filename {
       // download from url
-      Just.get(url) { response in
-        guard response.ok, let data = response.content else {
+      AF.request(url).response {
+        guard $0.error == nil, let data = $0.data else {
           callback(.failed)
           return
         }
@@ -114,6 +114,54 @@ class AssrtSupport {
 
   private let searchApi = "https://api.assrt.net/v1/sub/search"
   private let detailApi = "https://api.assrt.net/v1/sub/detail"
+  
+  
+  struct SearchApiResult: Decodable {
+    let status: Int
+    let sub: Sub
+    
+    struct Subtitle: Decodable {
+      let id: Int
+      let nativeName: String
+      let uploadTime: String
+      let subtype: String
+      let lang: Lang
+      
+      enum CodingKeys: String, CodingKey {
+        case id, subtype, lang, nativeName = "native_name", uploadTime = "upload_time"
+        
+      }
+    }
+    
+    struct Sub: Decodable {
+      let subs: [Subtitle]
+    }
+    
+    struct Lang: Decodable {
+      let desc: String
+    }
+  }
+  
+  struct DetailApiResult: Decodable {
+    let status: Int
+    let sub: Sub
+    
+    struct Subtitle: Decodable {
+      let url: String
+      let filename: String
+      let filelist: [FileObject]
+    }
+    
+    struct Sub: Decodable {
+      let subs: [Subtitle]
+    }
+    
+    struct FileObject: Decodable {
+      let url: String
+      let f: String
+      let s: String
+    }
+  }
 
   var token: String
   var usesUserToken = false
@@ -164,47 +212,28 @@ class AssrtSupport {
 
   func search(_ query: String) -> Promise<[AssrtSubtitle]> {
     return Promise { resolver in
-      Just.post(searchApi, params: ["q": query], headers: header) { result in
-        guard let json = result.json as? [String: Any] else {
+      
+      AF.request(searchApi,
+                 method: .post,
+                 parameters: ["q": query],
+                 headers: .init(header)).responseDecodable(of: SearchApiResult.self) {
+        
+        guard let result = $0.value else {
           resolver.reject(AssrtError.networkError)
           return
         }
-        guard let status = json["status"] as? Int else {
-          resolver.reject(AssrtError.wrongResponseFormat)
-          return
-        }
-        if let error = AssrtError(rawValue: status) {
+        if let error = AssrtError(rawValue: result.status) {
           resolver.reject(error)
           return
         }
-        // handle result
-        guard let subDict = json["sub"] as? [String: Any] else {
-          resolver.reject(AssrtError.wrongResponseFormat)
-          return
-        }
-        // assrt will return `sub: {}` when no result
-        if let _ = subDict["subs"] as? [String: Any] {
-          resolver.fulfill([])
-          return
-        }
-        guard let subArray = subDict["subs"] as? [[String: Any]] else {
-          resolver.reject(AssrtError.wrongResponseFormat)
-          return
-        }
-        var subtitles: [AssrtSubtitle] = []
-        var index = 0
-        for sub in subArray {
-          var subLang: String? = nil
-          if let lang = sub["lang"] as? [String: Any], let desc = lang["desc"] as? String {
-            subLang = desc
-          }
-          subtitles.append(AssrtSubtitle(index: index,
-                                         id: sub["id"] as! Int,
-                                         nativeName: sub["native_name"] as! String,
-                                         uploadTime: sub["upload_time"] as! String,
-                                         subType: sub["subtype"] as? String,
-                                         subLang: subLang))
-          index += 1
+        
+        let subtitles = result.sub.subs.enumerated().map {
+          AssrtSubtitle(index: $0.offset,
+                        id: $0.element.id,
+                        nativeName: $0.element.nativeName,
+                        uploadTime: $0.element.uploadTime,
+                        subType: $0.element.subtype,
+                        subLang: $0.element.lang.desc)
         }
         resolver.fulfill(subtitles)
       }
@@ -233,38 +262,33 @@ class AssrtSupport {
 
   func loadDetails(forSub sub: AssrtSubtitle) -> Promise<AssrtSubtitle> {
     return Promise { resolver in
-      Just.post(detailApi, params: ["id": sub.id], headers: header) { result in
-        guard let json = result.jsonIgnoringError as? [String: Any] else {
+      
+      AF.request(detailApi,
+                 method: .post,
+                 parameters: ["id": sub.id],
+                 headers: .init(header)).responseDecodable(of: DetailApiResult.self) {
+        guard let result = $0.value else {
           resolver.reject(AssrtError.networkError)
           return
         }
-        guard let status = json["status"] as? Int else {
-          resolver.reject(AssrtError.wrongResponseFormat)
-          return
-        }
-        if let error = AssrtError(rawValue: status) {
+        if let error = AssrtError(rawValue: result.status) {
           resolver.reject(error)
           return
         }
-        guard let subDict = json["sub"] as? [String: Any] else {
+        guard result.sub.subs.count == 1,
+              let subObj = result.sub.subs.first,
+              let url = URL(string: subObj.url)
+        else {
           resolver.reject(AssrtError.wrongResponseFormat)
           return
         }
-        guard let subArray = subDict["subs"] as? [[String: Any]], subArray.count == 1 else {
-          resolver.reject(AssrtError.wrongResponseFormat)
-          return
+        
+        sub.url = url
+        sub.filename = subObj.filename
+        sub.fileList = subObj.filelist.map {
+          AssrtSubtitle.File(url: URL(string: $0.url)!,
+                             filename: $0.f)
         }
-
-        sub.url = URL(string: subArray[0]["url"] as! String)
-        sub.filename = subArray[0]["filename"] as? String
-
-        if let fileList = subArray[0]["filelist"] as? [[String: String]] {
-          sub.fileList = fileList.map { info in
-            AssrtSubtitle.File(url: URL(string: info["url"]!)!,
-                               filename: info["f"]!)
-          }
-        }
-
         resolver.fulfill(sub)
       }
     }
