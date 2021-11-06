@@ -7,7 +7,7 @@
 //
 
 import Cocoa
-import Just
+import Alamofire
 
 fileprivate let ISO8601FormatString = "yyyyMMdd'T'HH:mm:ss"
 
@@ -60,8 +60,15 @@ class JustXMLRPC {
     methodCall.addChild(params)
     let reqXML = XMLDocument(rootElement: methodCall)
     // Request
-    Just.post(location, requestBody: reqXML.xmlData) { response in
-      if response.ok, let content = response.content, let responseDoc = try? XMLDocument(data: content) {
+
+    var request = URLRequest(url: URL(string: location)!)
+    request.httpBody = reqXML.xmlData
+    request.method = .post
+    request.headers.add(name: "Content-Type", value: "application/xml")
+    
+    AF.request(request).response {
+      if let content = $0.data,
+         let responseDoc = try? XMLDocument(data: content) {
         let rootElement = responseDoc.rootElement()
         if let _ = rootElement?.child("fault") {
           callback(.failure)
@@ -70,11 +77,11 @@ class JustXMLRPC {
           callback(.ok(JustXMLRPC.value(fromValueElement: params[0] as! XMLElement)))
         } else {
           // unexpected return value
-          callback(.error(XMLRPCError(method: method, httpCode: response.statusCode ?? 0, reason: "Bad response")))
+          callback(.error(XMLRPCError(method: method, httpCode: $0.response?.statusCode ?? 0, reason: "Bad response")))
         }
       } else {
         // http error
-        callback(.error(XMLRPCError(method: method, httpCode: response.statusCode ?? 0, reason: response.reason)))
+        callback(.error(XMLRPCError(method: method, httpCode: $0.response?.statusCode ?? 0, reason: $0.error?.errorDescription ?? "")))
       }
     }
   }

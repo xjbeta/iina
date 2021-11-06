@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Just
+import Alamofire
 import PromiseKit
 
 final class ShooterSubtitle: OnlineSubtitle {
@@ -29,12 +29,22 @@ final class ShooterSubtitle: OnlineSubtitle {
   }
 
   override func download(callback: @escaping DownloadCallback) {
-    Just.get(files[0].path) { response in
-      guard response.ok, let data = response.content else {
+    AF.request((files[0].path)).response {
+      guard $0.error == nil else {
         callback(.failed)
         return
       }
-      let fileName = "[\(self.index)]\(response.fileName ?? "")"
+      
+      guard let data = $0.data,
+            let field = $0.response?.headers["Content-Disposition"] else {
+        callback(.failed)
+        return
+      }
+      let unicodeArray: [UInt8] = field.unicodeScalars.map { UInt8($0.value) }
+      let unicodeStr = String(bytes: unicodeArray, encoding: String.Encoding.utf8)!
+      var fileName = Regex.httpFileName.captures(in: unicodeStr)[at: 1] ?? ""
+      
+      fileName = "[\(self.index)]\(fileName)"
       if let url = data.saveToFolder(Utility.tempDirURL, filename: fileName) {
         callback(.ok([url]))
       }
@@ -45,6 +55,26 @@ final class ShooterSubtitle: OnlineSubtitle {
 
 
 class ShooterSupport {
+  
+  struct ApiPathResult: Decodable {
+    let desc: String?
+    let delay: Int?
+    let files: [File]
+    
+    enum CodingKeys: String, CodingKey {
+      case desc = "Desc", delay = "Delay", files = "Files"
+    }
+    
+    struct File: Decodable {
+      let ext: String
+      let link: String
+      
+      enum CodingKeys: String, CodingKey {
+        case ext = "Ext", link = "Link"
+      }
+    }
+  }
+  
 
   struct FileInfo {
     var hashValue: String
@@ -115,30 +145,26 @@ class ShooterSupport {
 
   func request(_ info: FileInfo) -> Promise<[ShooterSubtitle]> {
     return Promise { resolver in
-      Just.post(apiPath, params: info.dictionary, timeout: 10) { response in
-        guard response.ok else {
+      AF.request(apiPath,
+                 method: .post,
+                 parameters: info.dictionary,
+                 requestModifier: { $0.timeoutInterval = 10 }
+      ).responseDecodable(of: [ApiPathResult].self) {
+        guard $0.error == nil, let json = $0.value else {
           resolver.reject(ShooterError.networkError)
           return
         }
-        guard let json = response.json as? ResponseData else {
-          resolver.fulfill([])
-          return
+        
+        let subtitles = json.enumerated().map {
+          ShooterSubtitle(index: $0.offset,
+                          desc: $0.element.desc ?? "",
+                          delay: $0.element.delay ?? 0,
+                          files: $0.element.files.map({
+            ShooterSubtitle.SubFile(ext: $0.ext,
+                                    path: $0.link)
+          }))
         }
-
-        var subtitles: [ShooterSubtitle] = []
-        var index = 1
-
-        json.forEach { sub in
-          let filesDic = sub["Files"] as! ResponseFilesData
-          let files = filesDic.map { o -> ShooterSubtitle.SubFile in
-            return ShooterSubtitle.SubFile(ext: o["Ext"]!, path: o["Link"]!)
-          }
-          let desc = sub["Desc"] as? String ?? ""
-          let delay = sub["Delay"] as? Int ?? 0
-
-          subtitles.append(ShooterSubtitle(index: index, desc: desc, delay: delay, files: files))
-          index += 1
-        }
+        
         resolver.fulfill(subtitles)
       }
     }

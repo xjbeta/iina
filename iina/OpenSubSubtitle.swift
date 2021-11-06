@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Just
+import Alamofire
 import PromiseKit
 import Gzip
 
@@ -39,8 +39,8 @@ final class OpenSubSubtitle: OnlineSubtitle {
   }
 
   override func download(callback: @escaping DownloadCallback) {
-    Just.get(subDlLink) { response in
-      guard response.ok, let data = response.content, let unzipped = try? data.gunzipped() else {
+    AF.request(subDlLink).response {
+      guard $0.error == nil, let data = $0.data, let unzipped = try? data.gunzipped() else {
         callback(.failed)
         return
       }

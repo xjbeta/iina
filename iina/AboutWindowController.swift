@@ -7,7 +7,7 @@
 //
 
 import Cocoa
-import Just
+import Alamofire
 
 fileprivate extension NSUserInterfaceItemIdentifier {
   static let dataSourceItem = NSUserInterfaceItemIdentifier(rawValue: "dataSourceItem")
@@ -140,9 +140,9 @@ extension AboutWindowController: NSCollectionViewDataSource {
   }
 
   private func loadContributors(from url: String) {
-    Just.get(url) { response in
+    AF.request(url).response(queue: .global()) {
       let prevCount = self.contributors.count
-      guard let data = response.content,
+      guard let data = $0.data,
         let contributors = try? JSONDecoder().decode([Contributor].self, from: data) else {
           DispatchQueue.main.async {
             self.contributorsCollectionViewHeightConstraint.constant = 24
@@ -158,7 +158,18 @@ extension AboutWindowController: NSCollectionViewDataSource {
       DispatchQueue.main.sync {
         self.contributorsCollectionView.insertItems(at: Set(insertIndices))
       }
-      if let nextURL = response.links["next"]?["url"] {
+      
+      guard let link = $0.response?.headers["link"] else { return }
+      var linkDic = [String: String]()
+      link.components(separatedBy: ",").forEach {
+        let components = $0.components(separatedBy:"; ")
+        let cleanPath = components[0]
+          .trimmingCharacters(in: .whitespaces)
+          .trimmingCharacters(in: CharacterSet(charactersIn: "<>"))
+        linkDic[components[1]] = cleanPath
+      }
+      
+      if let nextURL = linkDic["rel=\"next\""] {
         self.loadContributors(from: nextURL)
       }
     }
