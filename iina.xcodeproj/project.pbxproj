@@ -142,6 +142,7 @@
 		015616B52733A57F0055DCBE /* libXau.6.dylib in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 015616322733A5640055DCBE /* libXau.6.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		015616B62733A57F0055DCBE /* libpng16.16.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 015616332733A5640055DCBE /* libpng16.16.dylib */; };
 		015616B72733A5800055DCBE /* libpng16.16.dylib in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 015616332733A5640055DCBE /* libpng16.16.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		019AFB5E2736B43700B4E458 /* yt-dlp in Copy Executables */ = {isa = PBXBuildFile; fileRef = 019AFB5B2736B3CE00B4E458 /* yt-dlp */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		01A242F227211B7200198AD9 /* Cartfile in Resources */ = {isa = PBXBuildFile; fileRef = 01A242F127211B7200198AD9 /* Cartfile */; };
 		01A242F827211CD600198AD9 /* Sparkle.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01A242F327211CD500198AD9 /* Sparkle.xcframework */; };
 		01A242F927211CD700198AD9 /* Sparkle.xcframework in Copy Dylibs */ = {isa = PBXBuildFile; fileRef = 01A242F327211CD500198AD9 /* Sparkle.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -208,7 +209,6 @@
 		845FB0C71D39462E00C011E0 /* ControlBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845FB0C61D39462E00C011E0 /* ControlBarView.swift */; };
 		8460FBA91D6497490081841B /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8460FBA71D6497490081841B /* PlaylistViewController.swift */; };
 		846121BD1F35FCA500ABB39C /* DraggingDetect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846121BC1F35FCA500ABB39C /* DraggingDetect.swift */; };
-		8461BA681E4237C7008BB852 /* youtube-dl in Copy Executables */ = {isa = PBXBuildFile; fileRef = 8461BA671E4237C2008BB852 /* youtube-dl */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		8461C52E1D45FFF6006E91FF /* PlaySliderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8461C52D1D45FFF6006E91FF /* PlaySliderCell.swift */; };
 		8461C5301D462488006E91FF /* VideoTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8461C52F1D462488006E91FF /* VideoTime.swift */; };
 		846352581EEEE11A0043F0CC /* ThumbnailPeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846352571EEEE11A0043F0CC /* ThumbnailPeekView.swift */; };
@@ -368,7 +368,7 @@
 			dstSubfolderSpec = 6;
 			files = (
 				E3DE8DD31FD848BA0021921C /* iina-cli in Copy Executables */,
-				8461BA681E4237C7008BB852 /* youtube-dl in Copy Executables */,
+				019AFB5E2736B43700B4E458 /* yt-dlp in Copy Executables */,
 			);
 			name = "Copy Executables";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -558,6 +558,7 @@
 		015616312733A5640055DCBE /* libpostproc.55.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpostproc.55.dylib; path = deps/lib/libpostproc.55.dylib; sourceTree = "<group>"; };
 		015616322733A5640055DCBE /* libXau.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libXau.6.dylib; path = deps/lib/libXau.6.dylib; sourceTree = "<group>"; };
 		015616332733A5640055DCBE /* libpng16.16.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng16.16.dylib; path = deps/lib/libpng16.16.dylib; sourceTree = "<group>"; };
+		019AFB5B2736B3CE00B4E458 /* yt-dlp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "yt-dlp"; path = "deps/executable/yt-dlp"; sourceTree = SOURCE_ROOT; };
 		01A242F127211B7200198AD9 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = SOURCE_ROOT; };
 		01A242F327211CD500198AD9 /* Sparkle.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Sparkle.xcframework; path = Carthage/Build/Sparkle.xcframework; sourceTree = "<group>"; };
 		01A242F427211CD500198AD9 /* Mustache.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Mustache.xcframework; path = Carthage/Build/Mustache.xcframework; sourceTree = "<group>"; };
@@ -967,7 +968,6 @@
 		845FB0C61D39462E00C011E0 /* ControlBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlBarView.swift; sourceTree = "<group>"; };
 		8460FBA71D6497490081841B /* PlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
 		846121BC1F35FCA500ABB39C /* DraggingDetect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggingDetect.swift; sourceTree = "<group>"; };
-		8461BA671E4237C2008BB852 /* youtube-dl */ = {isa = PBXFileReference; lastKnownFileType = text; name = "youtube-dl"; path = "deps/executable/youtube-dl"; sourceTree = SOURCE_ROOT; };
 		8461C52D1D45FFF6006E91FF /* PlaySliderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySliderCell.swift; sourceTree = "<group>"; };
 		8461C52F1D462488006E91FF /* VideoTime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoTime.swift; sourceTree = "<group>"; };
 		846352571EEEE11A0043F0CC /* ThumbnailPeekView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThumbnailPeekView.swift; sourceTree = "<group>"; };
@@ -1738,7 +1738,7 @@
 		8461BA641E42344D008BB852 /* Executables */ = {
 			isa = PBXGroup;
 			children = (
-				8461BA671E4237C2008BB852 /* youtube-dl */,
+				019AFB5B2736B3CE00B4E458 /* yt-dlp */,
 			);
 			name = Executables;
 			path = iina;
