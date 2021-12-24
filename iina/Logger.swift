@@ -9,6 +9,7 @@
 import Foundation
 
 struct Logger {
+  private static var logClosed = false
 
   struct Subsystem: RawRepresentable {
     var rawValue: String
@@ -69,6 +70,7 @@ struct Logger {
 
   static func closeLogFile() {
     guard enabled else { return }
+    logClosed = true
     logFileHandle.closeFile()
   }
 
@@ -77,7 +79,7 @@ struct Logger {
     guard enabled else { return }
     #endif
 
-    guard level >= .preferred else { return }
+    guard level >= .preferred, !logClosed else { return }
     let time = dateFormatter.string(from: Date())
     let string = "\(time) [\(subsystem.rawValue)][\(level.description)] \(message)\(appendNewlineAtTheEnd ? "\n" : "")"
     print(string, terminator: "")
