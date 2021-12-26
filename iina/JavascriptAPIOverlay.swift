@@ -58,14 +58,14 @@ class JavascriptAPIOverlay: JavascriptAPI, JavascriptAPIOverlayExportable, WKScr
   func loadFile(_ path: String) {
     let rootURL = pluginInstance.plugin.root
     let url = rootURL.appendingPathComponent(path)
-    executeOnMainThread {
-      guard player!.mainWindow.isWindowLoaded && permitted(to: .displayVideoOverlay) else {
-        throwError(withMessage: "overlay.loadFile called when window is not available. Please call it after receiving the \"iina.window-loaded\" event.")
+    DispatchQueue.main.async {
+      guard self.player!.mainWindow.isWindowLoaded && self.permitted(to: .displayVideoOverlay) else {
+        self.throwError(withMessage: "overlay.loadFile called when window is not available. Please call it after receiving the \"iina.window-loaded\" event.")
         return
       }
-      pluginInstance.overlayView.loadFileURL(url, allowingReadAccessTo: rootURL)
-      pluginInstance.overlayViewLoaded = true
-      inSimpleMode = false
+      self.pluginInstance.overlayView.loadFileURL(url, allowingReadAccessTo: rootURL)
+      self.pluginInstance.overlayViewLoaded = true
+      self.inSimpleMode = false
     }
   }
 
